@@ -11,7 +11,7 @@ function DiscordIcon() {
   );
 }
 
-export default function SignInButton() {
+export default function SignInButton({ language = "en" }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -33,7 +33,9 @@ export default function SignInButton() {
         throw authError;
       }
     } catch (authError) {
-      setError(authError?.message || "Could not start Discord sign in.");
+      setError(authError?.message || (language === "ar"
+        ? "تعذر بدء تسجيل الدخول عبر Discord."
+        : "Could not start Discord sign in."));
       setBusy(false);
     }
   }
@@ -42,7 +44,9 @@ export default function SignInButton() {
     <div className="login-action">
       <button type="button" onClick={signIn} disabled={busy}>
         <DiscordIcon />
-        {busy ? "Opening Discord…" : "Continue with Discord"}
+        {busy
+          ? (language === "ar" ? "جارٍ فتح Discord…" : "Opening Discord…")
+          : (language === "ar" ? "المتابعة عبر Discord" : "Continue with Discord")}
         <span>→</span>
       </button>
       {error && <p role="alert">{error}</p>}

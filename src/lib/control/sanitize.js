@@ -1,4 +1,7 @@
 const ALLOWED_PROCESSES = new Set(["omar-guard", "lobby-games-bot"]);
+const RISK_LEVELS = new Set(["low", "medium", "high", "critical"]);
+const COMMAND_NAME_PATTERN = /^[a-z0-9][a-z0-9_-]{1,39}$/;
+const SNOWFLAKE_PATTERN = /^\d{15,25}$/;
 const TOKEN_PATTERN = /\b(?:[MN][A-Za-z\d_-]{20,}\.[A-Za-z\d_-]{6}\.[A-Za-z\d_-]{20,}|mfa\.[A-Za-z\d_-]{20,})\b/g;
 const SECRET_PATTERN = /\b(token|secret|password|api[_-]?key|authorization)\b(\s*[:=]\s*)([^\s,;]+)/gi;
 
@@ -13,6 +16,82 @@ function safeText(value, maximum = 32000) {
     .replace(SECRET_PATTERN, "$1$2[REDACTED]")
     .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "")
     .slice(-maximum);
+}
+
+function safeIds(value) {
+  return Array.isArray(value)
+    ? Array.from(new Set(value.map(String).filter((item) => SNOWFLAKE_PATTERN.test(item)))).slice(0, 20)
+    : [];
+}
+
+function sanitizeControl(control) {
+  const bots = {};
+
+  for (const target of ALLOWED_PROCESSES) {
+    const source = control?.bots?.[target] || {};
+    const catalog = Array.isArray(source.catalog)
+      ? source.catalog
+          .filter((item) => COMMAND_NAME_PATTERN.test(String(item?.name || "")))
+          .slice(0, 80)
+          .map((item) => ({
+            name: safeText(item.name, 40),
+            group: safeText(item.group || "other", 40),
+            label: {
+              en: safeText(item.label?.en || item.name, 100),
+              ar: safeText(item.label?.ar || item.name, 100)
+            },
+            risk: RISK_LEVELS.has(item.risk) ? item.risk : "low",
+            game: Boolean(item.game)
+          }))
+      : [];
+
+    const allowedNames = new Set(catalog.map((item) => item.name));
+    const commands = {};
+
+    for (const name of allowedNames) {
+      const entry = source.policy?.commands?.[name] || {};
+      commands[name] = {
+        enabled: entry.enabled !== false,
+        cooldownSeconds: Math.min(3600, Math.max(0, finite(entry.cooldownSeconds))),
+        allowedRoleIds: safeIds(entry.allowedRoleIds),
+        allowedChannelIds: safeIds(entry.allowedChannelIds)
+      };
+    }
+
+    const status = target === "omar-guard"
+      ? {
+          protectionMode: ["Passive", "Active", "Lockdown"].includes(source.status?.protectionMode)
+            ? source.status.protectionMode
+            : null,
+          trustedBotCount: finite(source.status?.trustedBotCount),
+          updatedAt: source.status?.updatedAt || null
+        }
+      : {
+          games: Array.isArray(source.status?.games)
+            ? source.status.games.slice(0, 30).map((game) => ({
+                gameKey: safeText(game?.gameKey, 40),
+                enabled: game?.enabled !== false,
+                rewardMultiplier: Math.min(5, Math.max(0.1, finite(game?.rewardMultiplier, 1))),
+                turnTimeoutSeconds: game?.turnTimeoutSeconds == null
+                  ? null
+                  : Math.min(300, Math.max(10, finite(game.turnTimeoutSeconds)))
+              }))
+            : [],
+          updatedAt: source.status?.updatedAt || null
+        };
+
+    bots[target] = {
+      catalog,
+      policy: {
+        version: 1,
+        updatedAt: source.policy?.updatedAt || null,
+        commands
+      },
+      status
+    };
+  }
+
+  return { bots };
 }
 
 export function sanitizeSnapshot(snapshot) {
@@ -78,7 +157,8 @@ export function sanitizeSnapshot(snapshot) {
         onlineCount: finite(guild.onlineCount),
         premiumTier: finite(guild.premiumTier)
       } : null
-    }
+    },
+    control: sanitizeControl(snapshot?.control || {})
   };
 }
 

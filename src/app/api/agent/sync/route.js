@@ -64,6 +64,7 @@ export async function POST(request) {
         processes: snapshot.processes,
         discord: snapshot.discord,
         logs: snapshot.logs,
+        control: snapshot.control,
         updated_at: new Date().toISOString()
       });
 

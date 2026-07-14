@@ -29,7 +29,7 @@ export async function GET() {
     const [statusResult, commandResult, auditResult] = await Promise.all([
       supabase
         .from("control_agent_status")
-        .select("agent_id,version,last_seen_at,observed_at,system,processes,discord,logs")
+        .select("agent_id,version,last_seen_at,observed_at,system,processes,discord,logs,control")
         .eq("agent_id", agentId)
         .maybeSingle(),
       supabase
@@ -65,7 +65,8 @@ export async function GET() {
               system: status.system,
               processes: status.processes,
               discord: status.discord,
-              logs: status.logs
+              logs: status.logs,
+              control: status.control
             }
           : {
               id: agentId,
@@ -76,7 +77,8 @@ export async function GET() {
               system: {},
               processes: [],
               discord: {},
-              logs: {}
+              logs: {},
+              control: { bots: {} }
             },
         commands: (commandResult.data || []).map(publicCommand),
         audit: auditResult.data || [],

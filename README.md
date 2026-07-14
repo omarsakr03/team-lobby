@@ -7,7 +7,10 @@
 - واجهة رئيسية احترافية متجاوبة مع الكمبيوتر والموبايل.
 - عرض مرئي للفرق النشطة واللاعبين والألعاب المدعومة.
 - أقسام المميزات، خطوات الانضمام، الأسئلة الشائعة، ودعوات واضحة للانضمام إلى Discord.
-- لوحة **Lobby Control** حقيقية: حالة البوتات، Start/Stop/Restart، السجلات، حالة Discord، الرسائل الخاصة، وسجل تدقيق.
+- لوحة **Lobby Control V2** ثنائية اللغة (العربية والإنجليزية) مع اتجاه RTL تلقائي وحفظ اختيار اللغة.
+- إدارة حالة البوتات، Start/Stop/Restart، السجلات، حالة Discord، الرسائل الخاصة، وسجل تدقيق.
+- كتالوج أوامر معتمد لكل بوت مع تشغيل/تعطيل الأمر، وقت تهدئة، وقوائم رتب وقنوات Discord المسموح بها.
+- أوضاع حماية Omar Guard: Passive / Active / Lockdown، وإعدادات آمنة لألعاب Lobby Games.
 - تسجيل Discord OAuth مقصور على قائمة Discord IDs محددة.
 - تشفير AES-256-GCM لحمولة أوامر التحكم والرسائل أثناء وجودها في قائمة الانتظار.
 - تكامل Supabase مع RLS مغلق على جداول التحكم، والوصول الخادمي فقط عبر Service Role.
@@ -30,7 +33,7 @@ npm run dev
 
 ## تهيئة لوحة التحكم
 
-1. أنشئ مشروع Supabase وشغّل الملف `supabase/control-plane.sql` داخل SQL Editor.
+1. للمشروع الجديد شغّل `supabase/control-plane.sql`. وإذا كانت النسخة الأولى مثبّتة بالفعل، شغّل فقط `supabase/control-center-v2.sql` داخل SQL Editor.
 2. فعّل Discord Provider داخل Supabase Authentication.
 3. ضع Callback URL الظاهر في Supabase داخل Discord Developer Portal.
 4. أضف `https://team-lobby.ddns.net/auth/callback` إلى Redirect URLs داخل Supabase.
@@ -41,7 +44,9 @@ npm run dev
 
 ```powershell
 $bytes = New-Object byte[] 32
-[Security.Cryptography.RandomNumberGenerator]::Fill($bytes)
+$rng = [Security.Cryptography.RandomNumberGenerator]::Create()
+$rng.GetBytes($bytes)
+$rng.Dispose()
 [Convert]::ToBase64String($bytes)
 ```
 

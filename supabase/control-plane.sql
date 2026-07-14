@@ -9,6 +9,7 @@ create table if not exists public.control_agent_status (
   processes jsonb not null default '[]'::jsonb,
   discord jsonb not null default '{}'::jsonb,
   logs jsonb not null default '{}'::jsonb,
+  control jsonb not null default '{}'::jsonb,
   updated_at timestamptz not null default now()
 );
 
@@ -20,7 +21,10 @@ create table if not exists public.control_commands (
     'process.restart',
     'dm.send',
     'status.refresh',
-    'logs.refresh'
+    'logs.refresh',
+    'command.policy.update',
+    'guard.mode.set',
+    'games.settings.update'
   )),
   target text,
   payload_ciphertext text not null,
