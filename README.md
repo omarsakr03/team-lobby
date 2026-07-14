@@ -1,18 +1,21 @@
 # Team Lobby Website
 
-واجهة Team Lobby التسويقية باتجاه **Competitive Neon**، مبنية بـNext.js ومجهزة للنشر على Vercel.
+منصة Team Lobby باتجاه **Competitive Neon**: موقع تسويقي عام + لوحة تحكم خاصة متصلة ببوتات Discord من خلال Agent آمن يعمل على Windows.
 
 ## ما تم تنفيذه
 
 - واجهة رئيسية احترافية متجاوبة مع الكمبيوتر والموبايل.
 - عرض مرئي للفرق النشطة واللاعبين والألعاب المدعومة.
 - أقسام المميزات، خطوات الانضمام، الأسئلة الشائعة، ودعوات واضحة للانضمام إلى Discord.
-- تصور مرئي لمرحلة **Lobby Control** القادمة: تحكم البوتات، الإحصائيات، وتنظيم رسائل Discord الخاصة.
+- لوحة **Lobby Control** حقيقية: حالة البوتات، Start/Stop/Restart، السجلات، حالة Discord، الرسائل الخاصة، وسجل تدقيق.
+- تسجيل Discord OAuth مقصور على قائمة Discord IDs محددة.
+- تشفير AES-256-GCM لحمولة أوامر التحكم والرسائل أثناء وجودها في قائمة الانتظار.
+- تكامل Supabase مع RLS مغلق على جداول التحكم، والوصول الخادمي فقط عبر Service Role.
 - صور أصلية محسّنة للويب وأيقونة خاصة بالموقع.
 - بيانات SEO وOpen Graph وفهرسة سليمة لمحركات البحث.
 - تحديث Next.js وReact وفحص الاعتمادات الأمنية.
 
-> قسم Lobby Control في هذه النسخة هو عرض تسويقي للمرحلة القادمة، وليس داشبورد متصلًا بالبوتات بعد.
+> لا تضع `SUPABASE_SERVICE_ROLE_KEY` أو `CONTROL_AGENT_SECRET` أو `CONTROL_PAYLOAD_ENCRYPTION_KEY` في أي متغير يبدأ بـ`NEXT_PUBLIC_`.
 
 ## التشغيل محليًا
 
@@ -24,6 +27,25 @@ npm run dev
 ```
 
 ثم افتح `http://localhost:3000`.
+
+## تهيئة لوحة التحكم
+
+1. أنشئ مشروع Supabase وشغّل الملف `supabase/control-plane.sql` داخل SQL Editor.
+2. فعّل Discord Provider داخل Supabase Authentication.
+3. ضع Callback URL الظاهر في Supabase داخل Discord Developer Portal.
+4. أضف `https://team-lobby.ddns.net/auth/callback` إلى Redirect URLs داخل Supabase.
+5. انسخ `.env.example` إلى `.env.local` محليًا، وأضف نفس القيم إلى Vercel Environment Variables.
+6. شغّل حزمة `team-lobby-agent` على جهاز Windows تحت PM2.
+
+أنشئ مفتاح تشفير حمولة الأوامر في PowerShell:
+
+```powershell
+$bytes = New-Object byte[] 32
+[Security.Cryptography.RandomNumberGenerator]::Fill($bytes)
+[Convert]::ToBase64String($bytes)
+```
+
+أنشئ سر الـAgent بالطريقة نفسها باستخدام 48 بايت، وضع نفس السر محليًا وفي Vercel.
 
 ## تعديل رابط Discord
 

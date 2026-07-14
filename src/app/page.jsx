@@ -90,6 +90,7 @@ export default function Home() {
           <a href="#find-players">Find Players</a>
           <a href="#games">Games</a>
           <a href="#community">Community</a>
+          <a href="/admin">Control</a>
         </nav>
         <a className="discord-status" href={DISCORD_URL} target="_blank" rel="noreferrer">
           <DiscordIcon />
@@ -99,7 +100,7 @@ export default function Home() {
         <details className="mobile-menu">
           <summary aria-label="Open navigation"><span /><span /></summary>
           <nav aria-label="Mobile navigation">
-            <a href="#top">Home</a><a href="#find-players">Find Players</a><a href="#games">Games</a><a href="#community">Community</a>
+            <a href="#top">Home</a><a href="#find-players">Find Players</a><a href="#games">Games</a><a href="#community">Community</a><a href="/admin">Admin Control</a>
             <a href={DISCORD_URL} target="_blank" rel="noreferrer">Join Discord</a>
           </nav>
         </details>
@@ -225,10 +226,10 @@ export default function Home() {
         <div className="control-shell">
           <div className="control-copy">
             <span className="eyebrow"><i /> LOBBY CONTROL</span>
-            <h2>Built to become your community command center.</h2>
-            <p>The next phase brings bot controls, server health, member activity, and Discord DM workflows into one admin experience.</p>
+            <h2>Your community command center is live.</h2>
+            <p>A private owner dashboard now connects bot controls, server health, safe runtime logs, and audited Discord DM workflows.</p>
             <ul><li><Icon name="bot" />Manage bots and automations</li><li><Icon name="chart" />Track server and member activity</li><li><Icon name="message" />Organize Discord DM workflows</li></ul>
-            <a className="text-link" href={DISCORD_URL} target="_blank" rel="noreferrer">Follow the roadmap <Icon name="arrow" /></a>
+            <a className="text-link" href="/admin">Open command center <Icon name="arrow" /></a>
           </div>
           <div className="dashboard-preview" aria-label="Future admin dashboard preview">
             <div className="dash-sidebar"><Brand compact /><span className="active"><Icon name="chart" /></span><span><Icon name="bot" /></span><span><Icon name="message" /></span></div>
@@ -257,14 +258,14 @@ export default function Home() {
           <details><summary>Is Team Lobby free to join?<span>+</span></summary><p>Yes. Joining the community, meeting players, and taking part in public events is free.</p></details>
           <details><summary>Can I join without a team?<span>+</span></summary><p>Absolutely. Team Lobby is designed to help solo players find people who match how they play.</p></details>
           <details><summary>Which games are supported?<span>+</span></summary><p>The server supports several popular competitive and social games, with new dedicated spaces added as the community grows.</p></details>
-          <details><summary>Is the admin dashboard available now?<span>+</span></summary><p>The public community experience starts on Discord. The integrated admin dashboard is planned as the next development phase.</p></details>
+          <details><summary>Is the admin dashboard available now?<span>+</span></summary><p>Yes. The private command center is live for approved Team Lobby administrators and protected by Discord sign-in.</p></details>
         </div>
       </section>
 
       <footer>
         <Brand compact />
         <p>© 2026 Team Lobby. Built for the players.</p>
-        <nav aria-label="Footer navigation"><a href="#find-players">Find Players</a><a href="#games">Games</a><a href={DISCORD_URL} target="_blank" rel="noreferrer">Discord</a></nav>
+        <nav aria-label="Footer navigation"><a href="#find-players">Find Players</a><a href="#games">Games</a><a href={DISCORD_URL} target="_blank" rel="noreferrer">Discord</a><a href="/admin">Admin</a></nav>
       </footer>
     </main>
   );

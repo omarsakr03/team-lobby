@@ -1,0 +1,24 @@
+.login-page {
+  min-height: 100svh;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 90px 24px;
+  background: #05060a;
+}
+
+.login-grid { position: absolute; inset: 0; opacity: .13; background-image: linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px); background-size: 58px 58px; mask-image: linear-gradient(to bottom, black, transparent 88%); }
+.login-glow { position: absolute; width: 580px; height: 580px; border-radius: 50%; filter: blur(120px); opacity: .16; pointer-events: none; }
+.login-glow--one { top: -260px; right: -180px; background: #22d3ee; }.login-glow--two { bottom: -300px; left: -140px; background: #8b5cf6; }
+.login-back { position: absolute; z-index: 2; top: 32px; left: 38px; color: #8992a8; font-size: 13px; transition: color .2s; }.login-back:hover { color: white; }
+.login-card { position: relative; z-index: 2; width: min(540px, 100%); padding: 52px; border: 1px solid rgba(139,92,246,.32); border-radius: 24px; background: linear-gradient(150deg, rgba(15,19,36,.96), rgba(7,9,17,.97)); box-shadow: 0 40px 100px rgba(0,0,0,.55), 0 0 60px rgba(139,92,246,.09); }
+.login-card::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: linear-gradient(130deg, rgba(255,255,255,.04), transparent 42%); }
+.login-brand { display: flex; align-items: center; gap: 12px; font: 700 16px "Space Grotesk", sans-serif; letter-spacing: .08em; }.login-brand b { color: #a855f7; }.login-mark { width: 44px; height: 49px; }.login-mark path:first-child { fill: rgba(139,92,246,.09); stroke: #8b5cf6; stroke-width: 2; }.login-mark path:nth-child(2) { fill: rgba(34,211,238,.05); stroke: #22d3ee; stroke-width: 1.4; }.login-mark path:last-child { fill: white; }
+.login-eyebrow { display: inline-flex; align-items: center; gap: 9px; margin-top: 43px; color: #b78cff; font-size: 10px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }.login-eyebrow i { width: 6px; height: 6px; border-radius: 50%; background: #a855f7; box-shadow: 0 0 13px #a855f7; }
+.login-card h1 { margin: 17px 0 0; font: 700 clamp(38px, 7vw, 55px)/1.02 "Space Grotesk", sans-serif; letter-spacing: -.045em; }.login-card > p { margin: 21px 0 0; color: #929bb0; font-size: 14px; line-height: 1.75; }
+.login-alert { margin-top: 22px; padding: 13px 15px; border: 1px solid rgba(255,89,100,.35); border-radius: 10px; color: #ff9aa2; background: rgba(255,89,100,.08); font-size: 12px; line-height: 1.5; }
+.login-action { margin-top: 30px; }.login-action button { width: 100%; min-height: 58px; display: grid; grid-template-columns: 22px 1fr 20px; place-items: center; gap: 12px; padding: 0 19px; border: 0; border-radius: 12px; color: white; background: linear-gradient(100deg, #7141ed, #5365f2 60%, #22b9e6); box-shadow: 0 16px 40px rgba(83,101,242,.25); font: 700 14px Inter, sans-serif; cursor: pointer; transition: transform .2s, filter .2s; }.login-action button:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.08); }.login-action button:disabled { cursor: wait; opacity: .7; }.login-action svg { width: 22px; fill: currentColor; }.login-action button span { font-size: 21px; }.login-action > p { margin: 10px 0 0; color: #ff8f98; font-size: 11px; }
+.login-security { display: grid; gap: 11px; margin-top: 28px; padding-top: 26px; border-top: 1px solid rgba(255,255,255,.08); }.login-security span { display: flex; align-items: center; gap: 10px; color: #747f98; font-size: 10px; }.login-security i { width: 6px; height: 6px; border-radius: 50%; background: #31e6a1; box-shadow: 0 0 10px rgba(49,230,161,.5); }
+.login-foot { position: absolute; z-index: 2; bottom: 27px; margin: 0; color: #4f5870; font-size: 9px; letter-spacing: .05em; }
+@media (max-width: 600px) { .login-page { padding: 78px 16px; }.login-back { top: 24px; left: 20px; }.login-card { padding: 34px 24px; border-radius: 18px; }.login-eyebrow { margin-top: 34px; }.login-foot { display: none; } }
