@@ -6,13 +6,13 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 const BOT_LABELS = {
   "omar-guard": {
     title: "Omar Guard",
-    subtitle: { en: "Security & moderation", ar: "ط§ظ„ط­ظ…ط§ظٹط© ظˆط§ظ„ط¥ط´ط±ط§ظپ" },
+    subtitle: { en: "Security & moderation", ar: "الحماية والإشراف" },
     accent: "violet",
     icon: "shield"
   },
   "lobby-games-bot": {
     title: "Lobby Games",
-    subtitle: { en: "Games & community", ar: "ط§ظ„ط£ظ„ط¹ط§ط¨ ظˆط§ظ„ظ…ط¬طھظ…ط¹" },
+    subtitle: { en: "Games & community", ar: "الألعاب والمجتمع" },
     accent: "cyan",
     icon: "bot"
   }
@@ -32,10 +32,10 @@ const COPY = {
     processControl: "PROCESS CONTROL", discordBots: "Discord bots",
     processNote: "Only the two whitelisted PM2 processes can be controlled.",
     uptime: "UPTIME", memory: "MEMORY", cpu: "CPU", restarts: "RESTARTS",
-    start: "Start", restart: "Restart", stop: "Stop", queuing: "Queuingâ€¦",
+    start: "Start", restart: "Restart", stop: "Stop", queuing: "Queuing…",
     commandRegistry: "COMMAND REGISTRY", botCommands: "Bot commands",
     commandIntro: "Enable commands, set cooldowns, and restrict access to Discord roles or channels.",
-    searchCommands: "Search commandsâ€¦", allBots: "All bots", allGroups: "All groups",
+    searchCommands: "Search commands…", allBots: "All bots", allGroups: "All groups",
     enabled: "Enabled", disabled: "Disabled", configure: "Configure", cooldown: "Cooldown",
     unrestricted: "No restrictions", restricted: "Restricted", seconds: "seconds",
     commandSettings: "Command settings", commandState: "Command state",
@@ -58,68 +58,68 @@ const COPY = {
     dmIntro: "Send a direct message through Lobby Games. Content is encrypted while queued and every action is audited.",
     maxCharacters: "Maximum 1,800 characters", rateLimit: "Five messages per 10 minutes",
     reviewRequired: "Explicit review before sending", discordUserId: "Discord User ID",
-    message: "Message", writeMessage: "Write the private messageâ€¦", reviewMessage: "Review message",
+    message: "Message", writeMessage: "Write the private message…", reviewMessage: "Review message",
     immutableHistory: "IMMUTABLE HISTORY", recentActivity: "Recent activity",
     auditIntro: "Actions are recorded without storing plaintext DM content in the audit log.",
     action: "ACTION", target: "TARGET", status: "STATUS", when: "WHEN", noActions: "No control actions yet.",
     confirmAction: "Confirm action", confirmationText: "This action can briefly affect service availability and will be audited.",
     confirm: "Confirm", reviewPrivate: "Review private message", recipient: "Recipient",
     editMessage: "Edit message", encryptSend: "Encrypt & send", commandQueued: "Command queued securely.",
-    retry: "Retry", loading: "Loading control centerâ€¦", windowsOffline: "Windows agent is offline.",
+    retry: "Retry", loading: "Loading control center…", windowsOffline: "Windows agent is offline.",
     queuedOffline: "Control actions will remain queued until it reconnects.", noMatches: "No commands match these filters.",
     policyUpdated: "Policy updated", gameSettings: "Game settings", protectionStatus: "Protection status",
     activeCommands: "active", roles: "roles", channels: "channels"
   },
   ar: {
-    overview: "ظ†ط¸ط±ط© ط¹ط§ظ…ط©", bots: "ط§ظ„ط¨ظˆطھط§طھ", commands: "ط§ظ„ط£ظˆط§ظ…ط±", operations: "ط§ظ„ط¹ظ…ظ„ظٹط§طھ",
-    logs: "ط§ظ„ط³ط¬ظ„ط§طھ", messages: "ط§ظ„ط±ط³ط§ط¦ظ„ ط§ظ„ط®ط§طµط©", audit: "ط³ط¬ظ„ ط§ظ„طھط¯ظ‚ظٹظ‚", publicSite: "ط§ظ„ظ…ظˆظ‚ط¹ ط§ظ„ط¹ط§ظ…",
-    commandCenter: "ظ…ط±ظƒط² ط§ظ„ظ‚ظٹط§ط¯ط©", workspace: "TEAM LOBBY / ظ…ط±ظƒط² ط§ظ„طھط­ظƒظ… V2",
-    signOut: "طھط³ط¬ظٹظ„ ط§ظ„ط®ط±ظˆط¬", agentOnline: "ط§ظ„ظˆظƒظٹظ„ ظ…طھطµظ„", agentOffline: "ط§ظ„ظˆظƒظٹظ„ ط؛ظٹط± ظ…طھطµظ„",
-    liveOperations: "ط§ظ„ط¹ظ…ظ„ظٹط§طھ ط§ظ„ظ…ط¨ط§ط´ط±ط©", platformOverview: "ظ†ط¸ط±ط© ط¹ط§ظ…ط© ط¹ظ„ظ‰ ط§ظ„ظ…ظ†طµط©",
-    autoRefresh: "طھط­ط¯ظٹط« طھظ„ظ‚ط§ط¦ظٹ ظƒظ„ ط®ظ…ط³ ط«ظˆط§ظ†ظچ", lastSignal: "ط¢ط®ط± ط¥ط´ط§ط±ط© ظ„ظ„ظˆظƒظٹظ„",
-    botHealth: "طµط­ط© ط§ظ„ط¨ظˆطھط§طھ", processesOnline: "ط¹ظ…ظ„ظٹط© ظ…طھطµظ„ط©", members: "ط§ظ„ط£ط¹ط¶ط§ط،",
-    currentlyOnline: "ظ…طھطµظ„ ط§ظ„ط¢ظ†", agentMemory: "ط°ط§ظƒط±ط© ط§ظ„ظˆظƒظٹظ„", controlLink: "ط±ط§ط¨ط· ط§ظ„طھط­ظƒظ…",
-    live: "ظ…طھطµظ„", offline: "ط؛ظٹط± ظ…طھطµظ„", commandCoverage: "طھط؛ط·ظٹط© ط§ظ„ط£ظˆط§ظ…ط±", managedCommands: "ط£ظ…ط± ظ…ظڈط¯ط§ط±",
-    processControl: "ط§ظ„طھط­ظƒظ… ظپظٹ ط§ظ„ط¹ظ…ظ„ظٹط§طھ", discordBots: "ط¨ظˆطھط§طھ Discord",
-    processNote: "ط§ظ„طھط­ظƒظ… ظ…ظ‚طµظˆط± ط¹ظ„ظ‰ ط¹ظ…ظ„ظٹطھظٹ PM2 ط§ظ„ظ…ط³ظ…ظˆط­ ط¨ظ‡ظ…ط§ ظپظ‚ط·.",
-    uptime: "ظ…ط¯ط© ط§ظ„طھط´ط؛ظٹظ„", memory: "ط§ظ„ط°ط§ظƒط±ط©", cpu: "ط§ظ„ظ…ط¹ط§ظ„ط¬", restarts: "ط¥ط¹ط§ط¯ط§طھ ط§ظ„طھط´ط؛ظٹظ„",
-    start: "طھط´ط؛ظٹظ„", restart: "ط¥ط¹ط§ط¯ط© طھط´ط؛ظٹظ„", stop: "ط¥ظٹظ‚ط§ظپ", queuing: "ط¬ط§ط±ظچ ط§ظ„ط¥ط±ط³ط§ظ„â€¦",
-    commandRegistry: "ط³ط¬ظ„ ط§ظ„ط£ظˆط§ظ…ط±", botCommands: "ط£ظˆط§ظ…ط± ط§ظ„ط¨ظˆطھط§طھ",
-    commandIntro: "ظپط¹ظ‘ظ„ ط§ظ„ط£ظˆط§ظ…ط± ط£ظˆ ط¹ط·ظ‘ظ„ظ‡ط§ ظˆط§ط¶ط¨ط· ط§ظ„ط§ظ†طھط¸ط§ط± ظˆط§ظ„طµظ„ط§ط­ظٹط§طھ ط­ط³ط¨ ط±طھط¨ ظˆظ‚ظ†ظˆط§طھ Discord.",
-    searchCommands: "ط§ط¨ط­ط« ظپظٹ ط§ظ„ط£ظˆط§ظ…ط±â€¦", allBots: "ظƒظ„ ط§ظ„ط¨ظˆطھط§طھ", allGroups: "ظƒظ„ ط§ظ„طھطµظ†ظٹظپط§طھ",
-    enabled: "ظ…ظپط¹ظ‘ظ„", disabled: "ظ…ط¹ط·ظ‘ظ„", configure: "ط¥ط¹ط¯ط§ط¯", cooldown: "ظپطھط±ط© ط§ظ„ط§ظ†طھط¸ط§ط±",
-    unrestricted: "ط¨ط¯ظˆظ† ظ‚ظٹظˆط¯", restricted: "ظ…ظ‚ظٹظ‘ط¯", seconds: "ط«ط§ظ†ظٹط©",
-    commandSettings: "ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ط£ظ…ط±", commandState: "ط­ط§ظ„ط© ط§ظ„ط£ظ…ط±",
-    allowedRoles: "ظ…ط¹ط±ظپط§طھ ط§ظ„ط±طھط¨ ط§ظ„ظ…ط³ظ…ظˆط­ط©", allowedChannels: "ظ…ط¹ط±ظپط§طھ ط§ظ„ظ‚ظ†ظˆط§طھ ط§ظ„ظ…ط³ظ…ظˆط­ط©",
-    idsHint: "ط§ظپطµظ„ ظ…ط¹ط±ظپط§طھ Discord ط¨ظپط§طµظ„ط© ط£ظˆ ظ…ط³ط§ظپط©. ط§طھط±ظƒ ط§ظ„ط­ظ‚ظ„ ظپط§ط±ط؛ظ‹ط§ ظ„ظ„ط³ظ…ط§ط­ ظ„ظ„ط¬ظ…ظٹط¹.",
-    cancel: "ط¥ظ„ط؛ط§ط،", savePolicy: "ط­ظپط¸ ط§ظ„ط³ظٹط§ط³ط©", policyQueued: "طھظ… ط¥ط±ط³ط§ظ„ ط³ظٹط§ط³ط© ط§ظ„ط£ظ…ط± ط¨ط£ظ…ط§ظ†.",
-    riskLow: "ط®ط·ظˆط±ط© ظ…ظ†ط®ظپط¶ط©", riskMedium: "ط®ط·ظˆط±ط© ظ…طھظˆط³ط·ط©", riskHigh: "ط®ط·ظˆط±ط© ط¹ط§ظ„ظٹط©", riskCritical: "ط­ط³ط§ط³ ط¬ط¯ظ‹ط§",
-    operationsDesk: "ظ…ظƒطھط¨ ط§ظ„ط¹ظ…ظ„ظٹط§طھ", safeActions: "ط¥ط¬ط±ط§ط،ط§طھ ط¢ظ…ظ†ط©",
-    operationsIntro: "ط¥ط¬ط±ط§ط،ط§طھ ظ…ط¹طھظ…ط¯ط© ظپظ‚ط·ط› ظƒظ„ طھط؛ظٹظٹط± ظٹظڈط±ط§ط¬ط¹ ظ…ط­ظ„ظٹظ‹ط§ ظˆظٹظڈط¶ط§ظپ ط¥ظ„ظ‰ ط³ط¬ظ„ ط§ظ„طھط¯ظ‚ظٹظ‚.",
-    guardMode: "ظˆط¶ط¹ ط­ظ…ط§ظٹط© Omar Guard", guardModeIntro: "ط؛ظٹظ‘ط± ظ…ط³طھظˆظ‰ ط§ظ„ط­ظ…ط§ظٹط© ط§ظ„ظ…ط¨ط§ط´ط± ط¯ظˆظ† ظƒط´ظپ طھظˆظƒظ† ط§ظ„ط¨ظˆطھ.",
-    passive: "ظ…ط±ط§ظ‚ط¨ط©", active: "ظ†ط´ط·", lockdown: "ط¥ط؛ظ„ط§ظ‚ ط£ظ…ظ†ظٹ", current: "ط§ظ„ط­ط§ظ„ظٹ",
-    applyMode: "طھط·ط¨ظٹظ‚ ط§ظ„ظˆط¶ط¹", gameTuning: "ط¶ط¨ط· Lobby Games",
-    gameTuningIntro: "طھط­ظƒظ… ظپظٹ طھظˆظپط± ط§ظ„ط£ظ„ط¹ط§ط¨ ظˆظ…ط¶ط§ط¹ظپ ط§ظ„ظ…ظƒط§ظپط¢طھ ظˆظ…ط¯ط© ظƒظ„ ط¯ظˆط±.",
-    reward: "ظ…ط¶ط§ط¹ظپ ط§ظ„ظ…ظƒط§ظپط£ط©", turnTimeout: "ظ…ظ‡ظ„ط© ط§ظ„ط¯ظˆط±", saveGame: "ط­ظپط¸ ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ظ„ط¹ط¨ط©",
-    gameQueued: "طھظ… ط¥ط±ط³ط§ظ„ ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ظ„ط¹ط¨ط© ط¨ط£ظ…ط§ظ†.", modeQueued: "طھظ… ط¥ط±ط³ط§ظ„ ظˆط¶ط¹ ط§ظ„ط­ظ…ط§ظٹط© ط¨ط£ظ…ط§ظ†.",
-    safeLogStream: "ط³ط¬ظ„ ط¢ظ…ظ†", runtimeLogs: "ط³ط¬ظ„ط§طھ ط§ظ„طھط´ط؛ظٹظ„", refresh: "طھط­ط¯ظٹط«",
-    output: "ط§ظ„ظ…ط®ط±ط¬ط§طھ", errors: "ط§ظ„ط£ط®ط·ط§ط،", noLogs: "ظ„ط§ طھظˆط¬ط¯ ط£ط³ط·ط± ط³ط¬ظ„ ظ…طھط§ط­ط©.",
-    logsSafe: "طھظڈط­ط¬ط¨ ط§ظ„ط£ط³ط±ط§ط± ظˆط£ظ†ظ…ط§ط· طھظˆظƒظ† Discord ط¯ط§ط®ظ„ ظˆظƒظٹظ„ Windows ط«ظ… طھظڈظپط­طµ ظ…ط±ط© ط£ط®ط±ظ‰ ط¹ظ„ظ‰ ط§ظ„ط®ط§ط¯ظ….",
-    ownerWorkflow: "ظ…ط³ط§ط± ظ…ط¹طھظ…ط¯ ظ…ظ† ط§ظ„ظ…ط§ظ„ظƒ", dmCenter: "ظ…ط±ظƒط² ط±ط³ط§ط¦ظ„ Discord",
-    dmIntro: "ط£ط±ط³ظ„ ط±ط³ط§ظ„ط© ط®ط§طµط© ط¹ط¨ط± Lobby Gamesط› ظٹظڈط´ظپظ‘ط± ط§ظ„ظ…ط­طھظˆظ‰ ط£ط«ظ†ط§ط، ط§ظ„ط§ظ†طھط¸ط§ط± ظˆطھظڈط³ط¬ظ‘ظ„ ظƒظ„ ط¹ظ…ظ„ظٹط©.",
-    maxCharacters: "ط§ظ„ط­ط¯ ط§ظ„ط£ظ‚طµظ‰ 1,800 ط­ط±ظپ", rateLimit: "ط®ظ…ط³ ط±ط³ط§ط¦ظ„ ظƒظ„ 10 ط¯ظ‚ط§ط¦ظ‚",
-    reviewRequired: "ظ…ط±ط§ط¬ط¹ط© طµط±ظٹط­ط© ظ‚ط¨ظ„ ط§ظ„ط¥ط±ط³ط§ظ„", discordUserId: "Discord User ID",
-    message: "ط§ظ„ط±ط³ط§ظ„ط©", writeMessage: "ط§ظƒطھط¨ ط§ظ„ط±ط³ط§ظ„ط© ط§ظ„ط®ط§طµط©â€¦", reviewMessage: "ظ…ط±ط§ط¬ط¹ط© ط§ظ„ط±ط³ط§ظ„ط©",
-    immutableHistory: "ط³ط¬ظ„ ط؛ظٹط± ظ‚ط§ط¨ظ„ ظ„ظ„طھظ„ط§ط¹ط¨", recentActivity: "ط§ظ„ظ†ط´ط§ط· ط§ظ„ط£ط®ظٹط±",
-    auditIntro: "طھظڈط³ط¬ظ‘ظ„ ط§ظ„ط¹ظ…ظ„ظٹط§طھ ط¯ظˆظ† ط­ظپط¸ ظ…ط­طھظˆظ‰ ط§ظ„ط±ط³ط§ط¦ظ„ ط§ظ„ط®ط§طµط© ظƒظ†طµ طµط±ظٹط­.",
-    action: "ط§ظ„ط¹ظ…ظ„ظٹط©", target: "ط§ظ„ظ‡ط¯ظپ", status: "ط§ظ„ط­ط§ظ„ط©", when: "ط§ظ„ظˆظ‚طھ", noActions: "ظ„ط§ طھظˆط¬ط¯ ط¹ظ…ظ„ظٹط§طھ طھط­ظƒظ… ط­طھظ‰ ط§ظ„ط¢ظ†.",
-    confirmAction: "طھط£ظƒظٹط¯ ط§ظ„ط¹ظ…ظ„ظٹط©", confirmationText: "ظ‚ط¯ طھط¤ط«ط± ظ‡ط°ظ‡ ط§ظ„ط¹ظ…ظ„ظٹط© ظ…ط¤ظ‚طھظ‹ط§ ط¹ظ„ظ‰ طھظˆظپط± ط§ظ„ط®ط¯ظ…ط© ظˆط³ظٹطھظ… طھط³ط¬ظٹظ„ظ‡ط§.",
-    confirm: "طھط£ظƒظٹط¯", reviewPrivate: "ظ…ط±ط§ط¬ط¹ط© ط§ظ„ط±ط³ط§ظ„ط© ط§ظ„ط®ط§طµط©", recipient: "ط§ظ„ظ…ط³طھظ„ظ…",
-    editMessage: "طھط¹ط¯ظٹظ„ ط§ظ„ط±ط³ط§ظ„ط©", encryptSend: "طھط´ظپظٹط± ظˆط¥ط±ط³ط§ظ„", commandQueued: "طھظ… ط¥ط±ط³ط§ظ„ ط§ظ„ط£ظ…ط± ط¨ط£ظ…ط§ظ†.",
-    retry: "ط¥ط¹ط§ط¯ط© ط§ظ„ظ…ط­ط§ظˆظ„ط©", loading: "ط¬ط§ط±ظچ طھط­ظ…ظٹظ„ ظ…ط±ظƒط² ط§ظ„طھط­ظƒظ…â€¦", windowsOffline: "ظˆظƒظٹظ„ Windows ط؛ظٹط± ظ…طھطµظ„.",
-    queuedOffline: "ط³طھط¸ظ„ ط£ظˆط§ظ…ط± ط§ظ„طھط­ظƒظ… ظپظٹ ط§ظ„ط§ظ†طھط¸ط§ط± ط­طھظ‰ ظٹط¹ط§ظˆط¯ ط§ظ„ط§طھطµط§ظ„.", noMatches: "ظ„ط§ طھظˆط¬ط¯ ط£ظˆط§ظ…ط± طھط·ط§ط¨ظ‚ ظ‡ط°ظ‡ ط§ظ„ظپظ„ط§طھط±.",
-    policyUpdated: "طھظ… طھط­ط¯ظٹط« ط§ظ„ط³ظٹط§ط³ط©", gameSettings: "ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ط£ظ„ط¹ط§ط¨", protectionStatus: "ط­ط§ظ„ط© ط§ظ„ط­ظ…ط§ظٹط©",
-    activeCommands: "ظ…ظپط¹ظ‘ظ„", roles: "ط±طھط¨", channels: "ظ‚ظ†ظˆط§طھ"
+    overview: "نظرة عامة", bots: "البوتات", commands: "الأوامر", operations: "العمليات",
+    logs: "السجلات", messages: "الرسائل الخاصة", audit: "سجل التدقيق", publicSite: "الموقع العام",
+    commandCenter: "مركز القيادة", workspace: "TEAM LOBBY / مركز التحكم V2",
+    signOut: "تسجيل الخروج", agentOnline: "الوكيل متصل", agentOffline: "الوكيل غير متصل",
+    liveOperations: "العمليات المباشرة", platformOverview: "نظرة عامة على المنصة",
+    autoRefresh: "تحديث تلقائي كل خمس ثوانٍ", lastSignal: "آخر إشارة للوكيل",
+    botHealth: "صحة البوتات", processesOnline: "عملية متصلة", members: "الأعضاء",
+    currentlyOnline: "متصل الآن", agentMemory: "ذاكرة الوكيل", controlLink: "رابط التحكم",
+    live: "متصل", offline: "غير متصل", commandCoverage: "تغطية الأوامر", managedCommands: "أمر مُدار",
+    processControl: "التحكم في العمليات", discordBots: "بوتات Discord",
+    processNote: "التحكم مقصور على عمليتي PM2 المسموح بهما فقط.",
+    uptime: "مدة التشغيل", memory: "الذاكرة", cpu: "المعالج", restarts: "إعادات التشغيل",
+    start: "تشغيل", restart: "إعادة تشغيل", stop: "إيقاف", queuing: "جارٍ الإرسال…",
+    commandRegistry: "سجل الأوامر", botCommands: "أوامر البوتات",
+    commandIntro: "فعّل الأوامر أو عطّلها واضبط الانتظار والصلاحيات حسب رتب وقنوات Discord.",
+    searchCommands: "ابحث في الأوامر…", allBots: "كل البوتات", allGroups: "كل التصنيفات",
+    enabled: "مفعّل", disabled: "معطّل", configure: "إعداد", cooldown: "فترة الانتظار",
+    unrestricted: "بدون قيود", restricted: "مقيّد", seconds: "ثانية",
+    commandSettings: "إعدادات الأمر", commandState: "حالة الأمر",
+    allowedRoles: "معرفات الرتب المسموحة", allowedChannels: "معرفات القنوات المسموحة",
+    idsHint: "افصل معرفات Discord بفاصلة أو مسافة. اترك الحقل فارغًا للسماح للجميع.",
+    cancel: "إلغاء", savePolicy: "حفظ السياسة", policyQueued: "تم إرسال سياسة الأمر بأمان.",
+    riskLow: "خطورة منخفضة", riskMedium: "خطورة متوسطة", riskHigh: "خطورة عالية", riskCritical: "حساس جدًا",
+    operationsDesk: "مكتب العمليات", safeActions: "إجراءات آمنة",
+    operationsIntro: "إجراءات معتمدة فقط؛ كل تغيير يُراجع محليًا ويُضاف إلى سجل التدقيق.",
+    guardMode: "وضع حماية Omar Guard", guardModeIntro: "غيّر مستوى الحماية المباشر دون كشف توكن البوت.",
+    passive: "مراقبة", active: "نشط", lockdown: "إغلاق أمني", current: "الحالي",
+    applyMode: "تطبيق الوضع", gameTuning: "ضبط Lobby Games",
+    gameTuningIntro: "تحكم في توفر الألعاب ومضاعف المكافآت ومدة كل دور.",
+    reward: "مضاعف المكافأة", turnTimeout: "مهلة الدور", saveGame: "حفظ إعدادات اللعبة",
+    gameQueued: "تم إرسال إعدادات اللعبة بأمان.", modeQueued: "تم إرسال وضع الحماية بأمان.",
+    safeLogStream: "سجل آمن", runtimeLogs: "سجلات التشغيل", refresh: "تحديث",
+    output: "المخرجات", errors: "الأخطاء", noLogs: "لا توجد أسطر سجل متاحة.",
+    logsSafe: "تُحجب الأسرار وأنماط توكن Discord داخل وكيل Windows ثم تُفحص مرة أخرى على الخادم.",
+    ownerWorkflow: "مسار معتمد من المالك", dmCenter: "مركز رسائل Discord",
+    dmIntro: "أرسل رسالة خاصة عبر Lobby Games؛ يُشفّر المحتوى أثناء الانتظار وتُسجّل كل عملية.",
+    maxCharacters: "الحد الأقصى 1,800 حرف", rateLimit: "خمس رسائل كل 10 دقائق",
+    reviewRequired: "مراجعة صريحة قبل الإرسال", discordUserId: "Discord User ID",
+    message: "الرسالة", writeMessage: "اكتب الرسالة الخاصة…", reviewMessage: "مراجعة الرسالة",
+    immutableHistory: "سجل غير قابل للتلاعب", recentActivity: "النشاط الأخير",
+    auditIntro: "تُسجّل العمليات دون حفظ محتوى الرسائل الخاصة كنص صريح.",
+    action: "العملية", target: "الهدف", status: "الحالة", when: "الوقت", noActions: "لا توجد عمليات تحكم حتى الآن.",
+    confirmAction: "تأكيد العملية", confirmationText: "قد تؤثر هذه العملية مؤقتًا على توفر الخدمة وسيتم تسجيلها.",
+    confirm: "تأكيد", reviewPrivate: "مراجعة الرسالة الخاصة", recipient: "المستلم",
+    editMessage: "تعديل الرسالة", encryptSend: "تشفير وإرسال", commandQueued: "تم إرسال الأمر بأمان.",
+    retry: "إعادة المحاولة", loading: "جارٍ تحميل مركز التحكم…", windowsOffline: "وكيل Windows غير متصل.",
+    queuedOffline: "ستظل أوامر التحكم في الانتظار حتى يعاود الاتصال.", noMatches: "لا توجد أوامر تطابق هذه الفلاتر.",
+    policyUpdated: "تم تحديث السياسة", gameSettings: "إعدادات الألعاب", protectionStatus: "حالة الحماية",
+    activeCommands: "مفعّل", roles: "رتب", channels: "قنوات"
   }
 };
 
@@ -161,7 +161,7 @@ function formatBytes(value) {
 }
 
 function formatUptime(startedAt) {
-  if (!startedAt) return "â€”";
+  if (!startedAt) return "—";
   const seconds = Math.max(0, Math.floor((Date.now() - Number(startedAt)) / 1000));
   const days = Math.floor(seconds / 86400);
   const hours = Math.floor((seconds % 86400) / 3600);
@@ -170,23 +170,23 @@ function formatUptime(startedAt) {
 }
 
 function timeAgo(value, locale) {
-  if (!value) return locale === "ar" ? "ط£ط¨ط¯ظ‹ط§" : "never";
+  if (!value) return locale === "ar" ? "أبدًا" : "never";
   const seconds = Math.max(0, Math.floor((Date.now() - new Date(value).getTime()) / 1000));
-  if (seconds < 10) return locale === "ar" ? "ط§ظ„ط¢ظ†" : "just now";
-  if (seconds < 60) return locale === "ar" ? `ظ…ظ†ط° ${seconds}ط«` : `${seconds}s ago`;
-  if (seconds < 3600) return locale === "ar" ? `ظ…ظ†ط° ${Math.floor(seconds / 60)}ط¯` : `${Math.floor(seconds / 60)}m ago`;
-  if (seconds < 86400) return locale === "ar" ? `ظ…ظ†ط° ${Math.floor(seconds / 3600)}ط³` : `${Math.floor(seconds / 3600)}h ago`;
-  return locale === "ar" ? `ظ…ظ†ط° ${Math.floor(seconds / 86400)}ظٹ` : `${Math.floor(seconds / 86400)}d ago`;
+  if (seconds < 10) return locale === "ar" ? "الآن" : "just now";
+  if (seconds < 60) return locale === "ar" ? `منذ ${seconds}ث` : `${seconds}s ago`;
+  if (seconds < 3600) return locale === "ar" ? `منذ ${Math.floor(seconds / 60)}د` : `${Math.floor(seconds / 60)}m ago`;
+  if (seconds < 86400) return locale === "ar" ? `منذ ${Math.floor(seconds / 3600)}س` : `${Math.floor(seconds / 3600)}h ago`;
+  return locale === "ar" ? `منذ ${Math.floor(seconds / 86400)}ي` : `${Math.floor(seconds / 86400)}d ago`;
 }
 
 function commandLabel(command, locale) {
   const labels = {
-    "process.start": ["Started", "طھط´ط؛ظٹظ„"], "process.stop": ["Stopped", "ط¥ظٹظ‚ط§ظپ"],
-    "process.restart": ["Restarted", "ط¥ط¹ط§ط¯ط© طھط´ط؛ظٹظ„"], "dm.send": ["Sent Discord DM", "ط¥ط±ط³ط§ظ„ ط±ط³ط§ظ„ط© Discord"],
-    "status.refresh": ["Refreshed status", "طھط­ط¯ظٹط« ط§ظ„ط­ط§ظ„ط©"], "logs.refresh": ["Refreshed logs", "طھط­ط¯ظٹط« ط§ظ„ط³ط¬ظ„ط§طھ"],
-    "command.policy.update": ["Updated command policy", "طھط­ط¯ظٹط« ط³ظٹط§ط³ط© ط£ظ…ط±"],
-    "guard.mode.set": ["Changed protection mode", "طھط؛ظٹظٹط± ظˆط¶ط¹ ط§ظ„ط­ظ…ط§ظٹط©"],
-    "games.settings.update": ["Updated game settings", "طھط­ط¯ظٹط« ط¥ط¹ط¯ط§ط¯ط§طھ ظ„ط¹ط¨ط©"]
+    "process.start": ["Started", "تشغيل"], "process.stop": ["Stopped", "إيقاف"],
+    "process.restart": ["Restarted", "إعادة تشغيل"], "dm.send": ["Sent Discord DM", "إرسال رسالة Discord"],
+    "status.refresh": ["Refreshed status", "تحديث الحالة"], "logs.refresh": ["Refreshed logs", "تحديث السجلات"],
+    "command.policy.update": ["Updated command policy", "تحديث سياسة أمر"],
+    "guard.mode.set": ["Changed protection mode", "تغيير وضع الحماية"],
+    "games.settings.update": ["Updated game settings", "تحديث إعدادات لعبة"]
   };
   return (labels[command.type] || [command.type, command.type])[locale === "ar" ? 1 : 0];
 }
@@ -327,7 +327,7 @@ export default function DashboardClient({ initialUser }) {
   }), [commandCatalog, commandSearch, commandBot, commandGroup]);
   const gameCommands = controlBots["lobby-games-bot"]?.catalog?.filter((command) => command.game) || [];
   const gameStatusMap = new Map((controlBots["lobby-games-bot"]?.status?.games || []).map((game) => [game.gameKey, game]));
-  const protectionMode = controlBots["omar-guard"]?.status?.protectionMode || "â€”";
+  const protectionMode = controlBots["omar-guard"]?.status?.protectionMode || "—";
   const logText = agent.logs?.[logTarget]?.[logStream] || t.noLogs;
   const enabledCommandCount = commandCatalog.filter((command) => command.policy?.enabled !== false).length;
 
@@ -367,7 +367,7 @@ export default function DashboardClient({ initialUser }) {
       <header className="admin-topbar">
         <div><span className="admin-kicker">{t.workspace}</span><h1>{t.commandCenter}</h1></div>
         <div className="admin-user">
-          <button className="locale-button" type="button" onClick={() => setLocale(locale === "ar" ? "en" : "ar")}><Icon name="globe"/><span>{locale === "ar" ? "EN" : "ط¹ط±ط¨ظٹ"}</span></button>
+          <button className="locale-button" type="button" onClick={() => setLocale(locale === "ar" ? "en" : "ar")}><Icon name="globe"/><span>{locale === "ar" ? "EN" : "عربي"}</span></button>
           <button className="icon-button" onClick={() => load()} aria-label="Refresh dashboard" disabled={loading}><Icon name="refresh"/></button>
           <span className="admin-user-copy"><b>{user.name}</b><small>{user.discordId}</small></span>
           {user.avatarUrl ? <img src={user.avatarUrl} alt="" /> : <span className="avatar-fallback">O</span>}
@@ -383,25 +383,25 @@ export default function DashboardClient({ initialUser }) {
         {loading && !data && <div className="admin-loading"><span/><p>{t.loading}</p></div>}
 
         {view === "overview" && <>
-          <section className="admin-section hero-overview"><SectionTitle eyebrow={t.liveOperations} title={t.platformOverview} note={`${t.autoRefresh} آ· ${t.lastSignal} ${timeAgo(agent.lastSeenAt, locale)}`}/><div className="status-ribbon"><span className={agent.online ? "ok" : "down"}><i/>{agent.online ? t.agentOnline : t.agentOffline}</span><span><Icon name="activity"/>{processes.filter((item) => item.status === "online").length}/2 {t.processesOnline}</span><span><Icon name="command"/>{enabledCommandCount}/{commandCatalog.length} {t.activeCommands}</span></div></section>
+          <section className="admin-section hero-overview"><SectionTitle eyebrow={t.liveOperations} title={t.platformOverview} note={`${t.autoRefresh} · ${t.lastSignal} ${timeAgo(agent.lastSeenAt, locale)}`}/><div className="status-ribbon"><span className={agent.online ? "ok" : "down"}><i/>{agent.online ? t.agentOnline : t.agentOffline}</span><span><Icon name="activity"/>{processes.filter((item) => item.status === "online").length}/2 {t.processesOnline}</span><span><Icon name="command"/>{enabledCommandCount}/{commandCatalog.length} {t.activeCommands}</span></div></section>
           <section className="metric-grid">
             <article><span className="metric-icon violet"><Icon name="shield"/></span><div><small>{t.botHealth}</small><strong>{processes.filter((item) => item.status === "online").length} / 2</strong><p>{t.processesOnline}</p></div><em className="metric-glow violet"/></article>
-            <article><span className="metric-icon cyan"><Icon name="users"/></span><div><small>{t.members}</small><strong>{guild?.memberCount?.toLocaleString() || "â€”"}</strong><p>{guild?.onlineCount?.toLocaleString() || "â€”"} {t.currentlyOnline}</p></div><em className="metric-glow cyan"/></article>
-            <article><span className="metric-icon green"><Icon name="cpu"/></span><div><small>{t.agentMemory}</small><strong>{formatBytes(agent.system?.usedMemoryBytes)}</strong><p>Node {agent.system?.nodeVersion || "â€”"}</p></div><em className="metric-glow green"/></article>
-            <article><span className="metric-icon violet"><Icon name="command"/></span><div><small>{t.commandCoverage}</small><strong>{enabledCommandCount} / {commandCatalog.length || "â€”"}</strong><p>{t.managedCommands}</p></div><em className="metric-glow violet"/></article>
+            <article><span className="metric-icon cyan"><Icon name="users"/></span><div><small>{t.members}</small><strong>{guild?.memberCount?.toLocaleString() || "—"}</strong><p>{guild?.onlineCount?.toLocaleString() || "—"} {t.currentlyOnline}</p></div><em className="metric-glow cyan"/></article>
+            <article><span className="metric-icon green"><Icon name="cpu"/></span><div><small>{t.agentMemory}</small><strong>{formatBytes(agent.system?.usedMemoryBytes)}</strong><p>Node {agent.system?.nodeVersion || "—"}</p></div><em className="metric-glow green"/></article>
+            <article><span className="metric-icon violet"><Icon name="command"/></span><div><small>{t.commandCoverage}</small><strong>{enabledCommandCount} / {commandCatalog.length || "—"}</strong><p>{t.managedCommands}</p></div><em className="metric-glow violet"/></article>
           </section>
           <section className="admin-section overview-split"><div className="overview-panel"><SectionTitle eyebrow={t.processControl} title={t.discordBots}/><div className="compact-bots">{processes.map((processItem) => { const label = BOT_LABELS[processItem.name]; return <button key={processItem.name} onClick={() => setView("bots")}><span className={`bot-emblem ${label.accent}`}><Icon name={label.icon}/></span><div><b>{label.title}</b><small>{label.subtitle[locale]}</small></div><em className={`status-badge ${processItem.status}`}><i/>{processItem.status}</em></button>; })}</div></div><div className="overview-panel"><SectionTitle eyebrow={t.immutableHistory} title={t.recentActivity}/><div className="activity-list">{(data?.commands || []).slice(0, 5).map((command) => <div key={command.id}><span><i/>{commandLabel(command, locale)}</span><b className={`command-status ${command.status}`}>{command.status}</b><time>{timeAgo(command.createdAt, locale)}</time></div>)}</div></div></section>
         </>}
 
         {view === "bots" && <section className="admin-section"><SectionTitle eyebrow={t.processControl} title={t.discordBots} note={t.processNote}/><div className="bot-grid">{processes.map((processItem) => { const label = BOT_LABELS[processItem.name]; const isOnline = processItem.status === "online"; return <article className={`bot-card ${label.accent}`} key={processItem.name}><div className="bot-head"><span className="bot-emblem"><Icon name={label.icon}/></span><div><h3>{label.title}</h3><p>{label.subtitle[locale]}</p></div><span className={`status-badge ${processItem.status}`}><i/>{processItem.status}</span></div><div className="bot-stats"><span><small>{t.uptime}</small><b>{formatUptime(processItem.uptimeStartedAt)}</b></span><span><small>{t.memory}</small><b>{formatBytes(processItem.memoryBytes)}</b></span><span><small>{t.cpu}</small><b>{Number(processItem.cpuPercent || 0).toFixed(1)}%</b></span><span><small>{t.restarts}</small><b>{processItem.restarts || 0}</b></span></div><div className="bot-actions"><button className="start" disabled={!agent.online || isOnline || Boolean(busy)} onClick={() => queueCommand({ type: "process.start", target: processItem.name })}>{busy === `process.start:${processItem.name}` ? t.queuing : t.start}</button><button disabled={!agent.online || !isOnline || Boolean(busy)} onClick={() => setConfirmAction({ type: "process.restart", target: processItem.name, title: label.title })}>{t.restart}</button><button className="danger" disabled={!agent.online || !isOnline || Boolean(busy)} onClick={() => setConfirmAction({ type: "process.stop", target: processItem.name, title: label.title })}>{t.stop}</button></div></article>; })}</div></section>}
 
-        {view === "commands" && <section className="admin-section"><SectionTitle eyebrow={t.commandRegistry} title={t.botCommands} note={t.commandIntro}/><div className="command-toolbar"><label className="command-search"><Icon name="search"/><input value={commandSearch} onChange={(event) => setCommandSearch(event.target.value)} placeholder={t.searchCommands}/></label><select value={commandBot} onChange={(event) => setCommandBot(event.target.value)}><option value="all">{t.allBots}</option>{Object.entries(BOT_LABELS).map(([id, label]) => <option key={id} value={id}>{label.title}</option>)}</select><select value={commandGroup} onChange={(event) => setCommandGroup(event.target.value)}><option value="all">{t.allGroups}</option>{groups.map((group) => <option key={group} value={group}>{group}</option>)}</select><span className="command-count">{filteredCommands.length}</span></div><div className="command-grid">{filteredCommands.map((command) => { const restricted = command.policy.allowedRoleIds?.length || command.policy.allowedChannelIds?.length; return <article className={`command-card risk-${command.risk}`} key={`${command.target}:${command.name}`}><div className="command-card-top"><span className={`command-bot-dot ${BOT_LABELS[command.target]?.accent}`}/><code>/{command.name}</code><span className={`risk-pill ${command.risk}`}>{t[`risk${command.risk[0].toUpperCase()}${command.risk.slice(1)}`]}</span></div><h3>{command.label?.[locale] || command.name}</h3><p>{BOT_LABELS[command.target]?.title} آ· {command.group}</p><div className="policy-summary"><span className={command.policy.enabled !== false ? "on" : "off"}><i/>{command.policy.enabled !== false ? t.enabled : t.disabled}</span><span><Icon name="activity"/>{command.policy.cooldownSeconds || 0}s</span><span><Icon name="lock"/>{restricted ? t.restricted : t.unrestricted}</span></div><button onClick={() => openPolicy(command)}><Icon name="sliders"/>{t.configure}</button></article>; })}{!filteredCommands.length && <p className="empty-state">{t.noMatches}</p>}</div></section>}
+        {view === "commands" && <section className="admin-section"><SectionTitle eyebrow={t.commandRegistry} title={t.botCommands} note={t.commandIntro}/><div className="command-toolbar"><label className="command-search"><Icon name="search"/><input value={commandSearch} onChange={(event) => setCommandSearch(event.target.value)} placeholder={t.searchCommands}/></label><select value={commandBot} onChange={(event) => setCommandBot(event.target.value)}><option value="all">{t.allBots}</option>{Object.entries(BOT_LABELS).map(([id, label]) => <option key={id} value={id}>{label.title}</option>)}</select><select value={commandGroup} onChange={(event) => setCommandGroup(event.target.value)}><option value="all">{t.allGroups}</option>{groups.map((group) => <option key={group} value={group}>{group}</option>)}</select><span className="command-count">{filteredCommands.length}</span></div><div className="command-grid">{filteredCommands.map((command) => { const restricted = command.policy.allowedRoleIds?.length || command.policy.allowedChannelIds?.length; return <article className={`command-card risk-${command.risk}`} key={`${command.target}:${command.name}`}><div className="command-card-top"><span className={`command-bot-dot ${BOT_LABELS[command.target]?.accent}`}/><code>/{command.name}</code><span className={`risk-pill ${command.risk}`}>{t[`risk${command.risk[0].toUpperCase()}${command.risk.slice(1)}`]}</span></div><h3>{command.label?.[locale] || command.name}</h3><p>{BOT_LABELS[command.target]?.title} · {command.group}</p><div className="policy-summary"><span className={command.policy.enabled !== false ? "on" : "off"}><i/>{command.policy.enabled !== false ? t.enabled : t.disabled}</span><span><Icon name="activity"/>{command.policy.cooldownSeconds || 0}s</span><span><Icon name="lock"/>{restricted ? t.restricted : t.unrestricted}</span></div><button onClick={() => openPolicy(command)}><Icon name="sliders"/>{t.configure}</button></article>; })}{!filteredCommands.length && <p className="empty-state">{t.noMatches}</p>}</div></section>}
 
         {view === "operations" && <><section className="admin-section"><SectionTitle eyebrow={t.operationsDesk} title={t.safeActions} note={t.operationsIntro}/><div className="guard-mode-panel"><div className="guard-mode-copy"><span className="bot-emblem violet"><Icon name="shield"/></span><div><small>{t.protectionStatus}</small><h3>{t.guardMode}</h3><p>{t.guardModeIntro}</p></div><strong>{t.current}: {protectionMode}</strong></div><div className="mode-buttons">{[["Passive", "passive"], ["Active", "active"], ["Lockdown", "lockdown"]].map(([mode, key]) => <button key={mode} className={`${mode.toLowerCase()} ${protectionMode === mode ? "selected" : ""}`} disabled={!agent.online || Boolean(busy)} onClick={() => mode === "Lockdown" ? setConfirmAction({ type: "guard.mode.set", target: "omar-guard", payload: { mode }, title: t.lockdown }) : queueCommand({ type: "guard.mode.set", target: "omar-guard", payload: { mode } }, t.modeQueued)}><i/>{t[key]}{protectionMode === mode && <small>{t.current}</small>}</button>)}</div></div></section><section className="admin-section"><SectionTitle eyebrow={t.gameSettings} title={t.gameTuning} note={t.gameTuningIntro}/><div className="game-settings-grid">{gameCommands.map((game) => <GameSettingCard key={game.name} game={game} current={gameStatusMap.get(game.name)} locale={locale} t={t} busy={busy === "games.settings.update:lobby-games-bot"} onSave={(payload) => queueCommand({ type: "games.settings.update", target: "lobby-games-bot", payload }, t.gameQueued)}/>)}</div></section></>}
 
         {view === "logs" && <section className="admin-section"><SectionTitle eyebrow={t.safeLogStream} title={t.runtimeLogs} action={<button className="outline-button" disabled={!agent.online || Boolean(busy)} onClick={() => queueCommand({ type: "logs.refresh" })}><Icon name="refresh"/>{t.refresh}</button>}/><div className="log-panel"><div className="log-toolbar"><div>{Object.keys(BOT_LABELS).map((name) => <button key={name} className={logTarget === name ? "active" : ""} onClick={() => setLogTarget(name)}>{BOT_LABELS[name].title}</button>)}</div><div><button className={logStream === "out" ? "active" : ""} onClick={() => setLogStream("out")}>{t.output}</button><button className={logStream === "error" ? "active" : ""} onClick={() => setLogStream("error")}>{t.errors}</button></div></div><pre aria-label={`${BOT_LABELS[logTarget].title} ${logStream} log`}>{logText}</pre><p>{t.logsSafe}</p></div></section>}
 
-        {view === "messages" && <section className="admin-section message-grid"><div><SectionTitle eyebrow={t.ownerWorkflow} title={t.dmCenter}/><p className="section-intro">{t.dmIntro}</p><div className="message-rules"><span><i/>{t.maxCharacters}</span><span><i/>{t.rateLimit}</span><span><i/>{t.reviewRequired}</span></div></div><form className="dm-form" onSubmit={(event) => { event.preventDefault(); setDmReview(true); }}><label>{t.discordUserId}<input value={dm.userId} onChange={(event) => setDm({ ...dm, userId: event.target.value.replace(/\D/g, "").slice(0, 25) })} placeholder="123456789012345678" inputMode="numeric" required minLength={15} maxLength={25}/></label><label>{t.message}<textarea value={dm.content} onChange={(event) => setDm({ ...dm, content: event.target.value.slice(0, 1800) })} placeholder={t.writeMessage} rows={7} required maxLength={1800}/><span>{dm.content.length} / 1800</span></label><button type="submit" disabled={!agent.online || Boolean(busy)}>{t.reviewMessage}<span>â†’</span></button></form></section>}
+        {view === "messages" && <section className="admin-section message-grid"><div><SectionTitle eyebrow={t.ownerWorkflow} title={t.dmCenter}/><p className="section-intro">{t.dmIntro}</p><div className="message-rules"><span><i/>{t.maxCharacters}</span><span><i/>{t.rateLimit}</span><span><i/>{t.reviewRequired}</span></div></div><form className="dm-form" onSubmit={(event) => { event.preventDefault(); setDmReview(true); }}><label>{t.discordUserId}<input value={dm.userId} onChange={(event) => setDm({ ...dm, userId: event.target.value.replace(/\D/g, "").slice(0, 25) })} placeholder="123456789012345678" inputMode="numeric" required minLength={15} maxLength={25}/></label><label>{t.message}<textarea value={dm.content} onChange={(event) => setDm({ ...dm, content: event.target.value.slice(0, 1800) })} placeholder={t.writeMessage} rows={7} required maxLength={1800}/><span>{dm.content.length} / 1800</span></label><button type="submit" disabled={!agent.online || Boolean(busy)}>{t.reviewMessage}<span>→</span></button></form></section>}
 
         {view === "audit" && <section className="admin-section"><SectionTitle eyebrow={t.immutableHistory} title={t.recentActivity} note={t.auditIntro}/><div className="audit-table"><div className="audit-row audit-head"><span>{t.action}</span><span>{t.target}</span><span>{t.status}</span><span>{t.when}</span></div>{(data?.commands || []).length ? data.commands.map((command) => <div className="audit-row" key={command.id}><span><i/>{commandLabel(command, locale)}</span><span>{command.target ? BOT_LABELS[command.target]?.title || command.target : "Control agent"}</span><span><b className={`command-status ${command.status}`}>{command.status}</b>{command.errorMessage && <small>{command.errorMessage}</small>}</span><time>{timeAgo(command.createdAt, locale)}</time></div>) : <p className="empty-state">{t.noActions}</p>}</div></section>}
       </div>
