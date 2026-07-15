@@ -27,7 +27,7 @@ const COPY = {
     liveOperations: "LIVE OPERATIONS", platformOverview: "Platform overview",
     autoRefresh: "Auto-refreshes every five seconds", lastSignal: "Last agent signal",
     botHealth: "BOT HEALTH", processesOnline: "processes online", members: "MEMBERS",
-    currentlyOnline: "currently online", agentMemory: "AGENT MEMORY", controlLink: "CONTROL LINK",
+    currentlyOnline: "currently online", systemMemory: "SYSTEM MEMORY USED", controlLink: "CONTROL LINK",
     live: "Live", offline: "Offline", commandCoverage: "COMMAND COVERAGE", managedCommands: "managed commands",
     processControl: "PROCESS CONTROL", discordBots: "Discord bots",
     processNote: "Only the two whitelisted PM2 processes can be controlled.",
@@ -78,7 +78,7 @@ const COPY = {
     liveOperations: "العمليات المباشرة", platformOverview: "نظرة عامة على المنصة",
     autoRefresh: "تحديث تلقائي كل خمس ثوانٍ", lastSignal: "آخر إشارة للوكيل",
     botHealth: "صحة البوتات", processesOnline: "عملية متصلة", members: "الأعضاء",
-    currentlyOnline: "متصل الآن", agentMemory: "ذاكرة الوكيل", controlLink: "رابط التحكم",
+    currentlyOnline: "متصل الآن", systemMemory: "ذاكرة الجهاز المستخدمة", controlLink: "رابط التحكم",
     live: "متصل", offline: "غير متصل", commandCoverage: "تغطية الأوامر", managedCommands: "أمر مُدار",
     processControl: "التحكم في العمليات", discordBots: "بوتات Discord",
     processNote: "التحكم مقصور على عمليتي PM2 المسموح بهما فقط.",
@@ -158,6 +158,15 @@ function formatBytes(value) {
   const number = Number(value || 0);
   if (!number) return "0 MB";
   return `${(number / 1024 / 1024).toFixed(number > 1024 ** 3 ? 0 : 1)} MB`;
+}
+
+function formatSystemMemory(value) {
+  const bytes = Number(value || 0);
+  if (!bytes) return "0 GB";
+  const gigabytes = bytes / 1024 / 1024 / 1024;
+  return gigabytes >= 1
+    ? `${gigabytes.toFixed(1)} GB`
+    : formatBytes(bytes);
 }
 
 function formatUptime(startedAt) {
@@ -387,7 +396,7 @@ export default function DashboardClient({ initialUser }) {
           <section className="metric-grid">
             <article><span className="metric-icon violet"><Icon name="shield"/></span><div><small>{t.botHealth}</small><strong>{processes.filter((item) => item.status === "online").length} / 2</strong><p>{t.processesOnline}</p></div><em className="metric-glow violet"/></article>
             <article><span className="metric-icon cyan"><Icon name="users"/></span><div><small>{t.members}</small><strong>{guild?.memberCount?.toLocaleString() || "—"}</strong><p>{guild?.onlineCount?.toLocaleString() || "—"} {t.currentlyOnline}</p></div><em className="metric-glow cyan"/></article>
-            <article><span className="metric-icon green"><Icon name="cpu"/></span><div><small>{t.agentMemory}</small><strong>{formatBytes(agent.system?.usedMemoryBytes)}</strong><p>Node {agent.system?.nodeVersion || "—"}</p></div><em className="metric-glow green"/></article>
+            <article><span className="metric-icon green"><Icon name="cpu"/></span><div><small>{t.systemMemory}</small><strong>{formatSystemMemory(agent.system?.usedMemoryBytes)}</strong><p>Node {agent.system?.nodeVersion || "—"}</p></div><em className="metric-glow green"/></article>
             <article><span className="metric-icon violet"><Icon name="command"/></span><div><small>{t.commandCoverage}</small><strong>{enabledCommandCount} / {commandCatalog.length || "—"}</strong><p>{t.managedCommands}</p></div><em className="metric-glow violet"/></article>
           </section>
           <section className="admin-section overview-split"><div className="overview-panel"><SectionTitle eyebrow={t.processControl} title={t.discordBots}/><div className="compact-bots">{processes.map((processItem) => { const label = BOT_LABELS[processItem.name]; return <button key={processItem.name} onClick={() => setView("bots")}><span className={`bot-emblem ${label.accent}`}><Icon name={label.icon}/></span><div><b>{label.title}</b><small>{label.subtitle[locale]}</small></div><em className={`status-badge ${processItem.status}`}><i/>{processItem.status}</em></button>; })}</div></div><div className="overview-panel"><SectionTitle eyebrow={t.immutableHistory} title={t.recentActivity}/><div className="activity-list">{(data?.commands || []).slice(0, 5).map((command) => <div key={command.id}><span><i/>{commandLabel(command, locale)}</span><b className={`command-status ${command.status}`}>{command.status}</b><time>{timeAgo(command.createdAt, locale)}</time></div>)}</div></div></section>
