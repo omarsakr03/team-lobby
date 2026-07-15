@@ -20,6 +20,23 @@ function publicCommand(row) {
   };
 }
 
+function publicAudit(row, commandById) {
+  const command = row.command_id ? commandById.get(row.command_id) : null;
+
+  return {
+    id: row.id,
+    type: row.action,
+    target: row.target,
+    actor: row.actor_name || row.actor_discord_id,
+    status: command?.status || "recorded",
+    errorCode: command?.error_code || null,
+    errorMessage: command?.error_message || null,
+    metadata: row.metadata,
+    createdAt: row.created_at,
+    completedAt: command?.completed_at || null
+  };
+}
+
 export async function GET() {
   try {
     const user = await requireAdmin();
@@ -51,6 +68,8 @@ export async function GET() {
     const status = statusResult.data;
     const lastSeen = status?.last_seen_at ? new Date(status.last_seen_at).getTime() : 0;
     const agentOnline = Date.now() - lastSeen < 20000;
+    const commands = commandResult.data || [];
+    const commandById = new Map(commands.map((command) => [command.id, command]));
 
     return NextResponse.json(
       {
@@ -80,8 +99,8 @@ export async function GET() {
               logs: {},
               control: { bots: {} }
             },
-        commands: (commandResult.data || []).map(publicCommand),
-        audit: auditResult.data || [],
+        commands: commands.map(publicCommand),
+        audit: (auditResult.data || []).map((entry) => publicAudit(entry, commandById)),
         serverTime: new Date().toISOString()
       },
       {

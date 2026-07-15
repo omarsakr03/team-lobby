@@ -19,6 +19,28 @@ const GAME_KEYS = new Set([
   "guess", "guesscountry", "fasttype", "math", "sortnumbers"
 ]);
 
+function queueError(error) {
+  const message = String(error?.message || "");
+
+  if (message.includes("CONTROL_DM_RATE_LIMITED")) {
+    return new AccessError(
+      "Discord DM limit reached. Wait before sending again.",
+      429,
+      "DM_RATE_LIMITED"
+    );
+  }
+
+  if (message.includes("CONTROL_RATE_LIMITED")) {
+    return new AccessError(
+      "Too many control actions. Wait one minute.",
+      429,
+      "RATE_LIMITED"
+    );
+  }
+
+  return error;
+}
+
 function idList(value) {
   if (!Array.isArray(value)) return [];
   const ids = Array.from(new Set(value.map(String).filter((item) => SNOWFLAKE_PATTERN.test(item))));
@@ -184,9 +206,7 @@ export async function POST(request) {
       .select("id,type,target,status,created_at")
       .single();
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw queueError(error);
 
     const auditMetadata = command.type === "dm.send"
       ? {
@@ -201,14 +221,32 @@ export async function POST(request) {
             ? { gameKey: command.payload.gameKey }
             : {};
 
-    await supabase.from("control_audit_log").insert({
-      actor_discord_id: user.discordId,
-      actor_name: user.name,
-      action: command.type,
-      target: command.target,
-      command_id: data.id,
-      metadata: auditMetadata
-    });
+    // The database trigger writes this row atomically with the command. The
+    // fallback keeps deployments safe until the migration has been applied.
+    const { data: recordedAudit, error: auditReadError } = await supabase
+      .from("control_audit_log")
+      .select("id")
+      .eq("command_id", data.id)
+      .maybeSingle();
+
+    if (auditReadError) {
+      throw auditReadError;
+    }
+
+    if (!recordedAudit) {
+      const { error: auditError } = await supabase.from("control_audit_log").insert({
+        actor_discord_id: user.discordId,
+        actor_name: user.name,
+        action: command.type,
+        target: command.target,
+        command_id: data.id,
+        metadata: auditMetadata
+      });
+
+      if (auditError) {
+        throw auditError;
+      }
+    }
 
     return NextResponse.json({ ok: true, command: data }, { status: 202 });
   } catch (error) {

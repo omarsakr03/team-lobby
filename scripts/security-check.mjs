@@ -85,11 +85,33 @@ const controlPlaneSql = await readFile(
   new URL("../supabase/control-plane.sql", import.meta.url),
   "utf8"
 );
+const commandRoute = await readFile(
+  new URL("../src/app/api/control/commands/route.js", import.meta.url),
+  "utf8"
+);
+const overviewRoute = await readFile(
+  new URL("../src/app/api/control/overview/route.js", import.meta.url),
+  "utf8"
+);
+const dashboardClient = await readFile(
+  new URL("../src/app/admin/dashboard-client.jsx", import.meta.url),
+  "utf8"
+);
 
 assert(syncRoute.includes('"complete_control_command"'));
 assert(syncRoute.includes("acknowledgedCompletionIds"));
 assert(controlPlaneSql.includes("lease_expires_at"));
 assert(controlPlaneSql.includes("claim_attempts"));
 assert(controlPlaneSql.includes("complete_control_command"));
+assert(controlPlaneSql.includes("enforce_control_command_insert"));
+assert(controlPlaneSql.includes("write_control_command_audit"));
+assert(controlPlaneSql.includes("prevent_control_audit_mutation"));
+assert(commandRoute.includes("recordedAudit"));
+assert(commandRoute.includes("auditError"));
+assert(commandRoute.includes("CONTROL_RATE_LIMITED"));
+assert(overviewRoute.includes("publicAudit"));
+assert(dashboardClient.includes("(data?.audit || [])"));
+assert(dashboardClient.includes("protectionMode === mode"));
+assert(dashboardClient.includes('setConfirmAction({ type: "guard.mode.set"'));
 
 console.log("Dashboard security checks passed.");
