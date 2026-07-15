@@ -33,7 +33,7 @@ npm run dev
 
 ## تهيئة لوحة التحكم
 
-1. للمشروع الجديد شغّل `supabase/control-plane.sql`. وإذا كانت النسخة الأولى مثبّتة بالفعل، شغّل فقط `supabase/control-center-v2.sql` داخل SQL Editor.
+1. للمشروع الجديد شغّل `supabase/control-plane.sql`. وإذا كانت لوحة V2 مثبّتة بالفعل، شغّل `supabase/migrations/20260714_command_leases.sql` داخل SQL Editor قبل نشر الموقع والـAgent 2.1.
 2. فعّل Discord Provider داخل Supabase Authentication.
 3. ضع Callback URL الظاهر في Supabase داخل Discord Developer Portal.
 4. أضف `https://team-lobby.ddns.net/auth/callback` إلى Redirect URLs داخل Supabase.

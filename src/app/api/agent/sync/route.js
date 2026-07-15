@@ -73,30 +73,44 @@ export async function POST(request) {
     }
 
     const acknowledgedCompletionIds = [];
+    const completionErrors = [];
 
     for (const completion of completions) {
       if (!isUuid(completion.id)) {
         continue;
       }
 
-      const { data, error } = await supabase
-        .from("control_commands")
-        .update({
-          status: completion.status,
-          result: completion.result,
-          error_code: completion.errorCode,
-          error_message: completion.errorMessage,
-          completed_at: completion.completedAt
-        })
-        .eq("id", completion.id)
-        .eq("claimed_by", agentId)
-        .eq("status", "claimed")
-        .select("id")
-        .maybeSingle();
+      const { data, error } = await supabase.rpc(
+        "complete_control_command",
+        {
+          p_agent_id: agentId,
+          p_command_id: completion.id,
+          p_status: completion.status,
+          p_result: completion.result,
+          p_error_code: completion.errorCode,
+          p_error_message: completion.errorMessage,
+          p_completed_at: completion.completedAt
+        }
+      );
 
-      if (!error && data?.id) {
-        acknowledgedCompletionIds.push(data.id);
+      if (error) {
+        completionErrors.push(completion.id);
+        console.error(
+          `[Control] Completion ${completion.id} could not be stored:`,
+          error.message
+        );
+        continue;
       }
+
+      if (data === true) {
+        acknowledgedCompletionIds.push(completion.id);
+      }
+    }
+
+    if (completionErrors.length > 0) {
+      throw new Error(
+        `Could not persist ${completionErrors.length} command completion(s).`
+      );
     }
 
     const { data: claimed, error: claimError } = await supabase.rpc(
@@ -126,7 +140,8 @@ export async function POST(request) {
             status: "failed",
             error_code: "PAYLOAD_DECRYPT_FAILED",
             error_message: "The command payload could not be decrypted.",
-            completed_at: new Date().toISOString()
+            completed_at: new Date().toISOString(),
+            lease_expires_at: null
           })
           .eq("id", row.id)
           .eq("claimed_by", agentId);

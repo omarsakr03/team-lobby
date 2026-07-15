@@ -6,6 +6,20 @@ process.env.CONTROL_PAYLOAD_ENCRYPTION_KEY = randomBytes(32).toString("base64");
 
 const { encryptPayload, decryptPayload } = await import("../src/lib/control/crypto.js");
 const { sanitizeSnapshot } = await import("../src/lib/control/sanitize.js");
+const { resolveInternalRedirect } = await import("../src/lib/control/redirect.js");
+
+assert.equal(
+  resolveInternalRedirect("/admin?tab=logs", "https://team-lobby.ddns.net"),
+  "/admin?tab=logs"
+);
+assert.equal(
+  resolveInternalRedirect("//evil.example", "https://team-lobby.ddns.net"),
+  "/admin"
+);
+assert.equal(
+  resolveInternalRedirect("/\\evil.example", "https://team-lobby.ddns.net"),
+  "/admin"
+);
 
 const sensitive = {
   userId: "538241496630165515",
@@ -62,5 +76,20 @@ const envExample = await readFile(new URL("../.env.example", import.meta.url), "
 for (const key of ["SUPABASE_SERVICE_ROLE_KEY", "CONTROL_AGENT_SECRET", "CONTROL_PAYLOAD_ENCRYPTION_KEY"]) {
   assert(!envExample.includes(`NEXT_PUBLIC_${key}`), `${key} must remain server-only.`);
 }
+
+const syncRoute = await readFile(
+  new URL("../src/app/api/agent/sync/route.js", import.meta.url),
+  "utf8"
+);
+const controlPlaneSql = await readFile(
+  new URL("../supabase/control-plane.sql", import.meta.url),
+  "utf8"
+);
+
+assert(syncRoute.includes('"complete_control_command"'));
+assert(syncRoute.includes("acknowledgedCompletionIds"));
+assert(controlPlaneSql.includes("lease_expires_at"));
+assert(controlPlaneSql.includes("claim_attempts"));
+assert(controlPlaneSql.includes("complete_control_command"));
 
 console.log("Dashboard security checks passed.");
