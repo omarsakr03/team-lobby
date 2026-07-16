@@ -53,20 +53,30 @@ export async function POST(request) {
       : [];
     const supabase = createAdminClient();
 
-    const { error: statusError } = await supabase
-      .from("control_agent_status")
-      .upsert({
-        agent_id: agentId,
-        version: snapshot.version,
-        last_seen_at: new Date().toISOString(),
-        observed_at: snapshot.observedAt,
-        system: snapshot.system,
-        processes: snapshot.processes,
-        discord: snapshot.discord,
-        logs: snapshot.logs,
-        control: snapshot.control,
-        updated_at: new Date().toISOString()
-      });
+    const statusUpdate = {
+      agent_id: agentId,
+      version: snapshot.version,
+      last_seen_at: new Date().toISOString(),
+      observed_at: snapshot.observedAt,
+      system: snapshot.system,
+      processes: snapshot.processes,
+      updated_at: new Date().toISOString()
+    };
+
+    if (snapshot.included.discord) statusUpdate.discord = snapshot.discord;
+    if (snapshot.included.logs) statusUpdate.logs = snapshot.logs;
+    if (snapshot.included.control) statusUpdate.control = snapshot.control;
+
+    const hasFullSnapshot = snapshot.included.discord
+      && snapshot.included.logs
+      && snapshot.included.control;
+    const statusQuery = hasFullSnapshot
+      ? supabase.from("control_agent_status").upsert(statusUpdate)
+      : supabase
+        .from("control_agent_status")
+        .update(statusUpdate)
+        .eq("agent_id", agentId);
+    const { error: statusError } = await statusQuery;
 
     if (statusError) {
       throw statusError;
@@ -150,6 +160,7 @@ export async function POST(request) {
 
     return NextResponse.json({
       ok: true,
+      snapshotProtocol: 2,
       serverTime: new Date().toISOString(),
       acknowledgedCompletionIds,
       commands

@@ -69,7 +69,12 @@ const COPY = {
     retry: "Retry", loading: "Loading control center…", windowsOffline: "Windows agent is offline.",
     queuedOffline: "Control actions will remain queued until it reconnects.", noMatches: "No commands match these filters.",
     policyUpdated: "Policy updated", gameSettings: "Game settings", protectionStatus: "Protection status",
-    activeCommands: "active", roles: "roles", channels: "channels"
+    activeCommands: "active", roles: "roles", channels: "channels",
+    networkUsage: "Internet usage", networkEyebrow: "MEASURED TRAFFIC",
+    networkNote: "Bot counters measure their Node process sockets. Agent counters measure control-sync payloads.",
+    today: "Today", thisMonth: "This month", lifetime: "Lifetime",
+    upload: "Upload", download: "Download", meterPending: "Waiting for the first meter sample",
+    agentControl: "Control Agent", processSockets: "Process sockets", syncPayload: "Sync payload"
   },
   ar: {
     overview: "نظرة عامة", bots: "البوتات", commands: "الأوامر", operations: "العمليات",
@@ -120,7 +125,12 @@ const COPY = {
     retry: "إعادة المحاولة", loading: "جارٍ تحميل مركز التحكم…", windowsOffline: "وكيل Windows غير متصل.",
     queuedOffline: "ستظل أوامر التحكم في الانتظار حتى يعاود الاتصال.", noMatches: "لا توجد أوامر تطابق هذه الفلاتر.",
     policyUpdated: "تم تحديث السياسة", gameSettings: "إعدادات الألعاب", protectionStatus: "حالة الحماية",
-    activeCommands: "مفعّل", roles: "رتب", channels: "قنوات"
+    activeCommands: "مفعّل", roles: "رتب", channels: "قنوات",
+    networkUsage: "استهلاك الإنترنت", networkEyebrow: "استهلاك مقاس فعليًا",
+    networkNote: "عدادات البوتات تقيس اتصالات عملية Node نفسها، وعداد الوكيل يقيس بيانات المزامنة مع لوحة التحكم.",
+    today: "اليوم", thisMonth: "هذا الشهر", lifetime: "الإجمالي",
+    upload: "رفع", download: "تنزيل", meterPending: "في انتظار أول قراءة من العداد",
+    agentControl: "وكيل التحكم", processSockets: "اتصالات العملية", syncPayload: "بيانات المزامنة"
   }
 };
 
@@ -146,7 +156,8 @@ function Icon({ name }) {
     globe: <><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></>,
     search: <><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></>,
     lock: <><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></>,
-    activity: <><path d="M3 12h4l2-7 4 14 2-7h6"/></>
+    activity: <><path d="M3 12h4l2-7 4 14 2-7h6"/></>,
+    network: <><path d="M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="20" r="1"/><path d="M2 9a14 14 0 0 1 20 0"/></>
   };
   return <svg className="admin-icon" viewBox="0 0 24 24" aria-hidden="true">{paths[name]}</svg>;
 }
@@ -159,6 +170,18 @@ function formatBytes(value) {
   const number = Number(value || 0);
   if (!number) return "0 MB";
   return `${(number / 1024 / 1024).toFixed(number > 1024 ** 3 ? 0 : 1)} MB`;
+}
+
+function formatTraffic(value) {
+  const bytes = Math.max(0, Number(value || 0));
+  if (bytes < 1024) return `${Math.round(bytes)} B`;
+  if (bytes < 1024 ** 2) return `${(bytes / 1024).toFixed(1)} KB`;
+  if (bytes < 1024 ** 3) return `${(bytes / 1024 ** 2).toFixed(1)} MB`;
+  return `${(bytes / 1024 ** 3).toFixed(2)} GB`;
+}
+
+function trafficTotal(counter) {
+  return Number(counter?.uploadBytes || 0) + Number(counter?.downloadBytes || 0);
 }
 
 function formatSystemMemory(value) {
@@ -207,6 +230,17 @@ function splitIds(value) {
 
 function SectionTitle({ eyebrow, title, note, action }) {
   return <div className="section-title"><div><span>{eyebrow}</span><h2>{title}</h2></div>{action || (note ? <p>{note}</p> : null)}</div>;
+}
+
+function NetworkUsageCard({ title, subtitle, usage, accent, t }) {
+  return <article className={`network-card ${accent || "green"}`}>
+    <div className="network-card-head"><span><Icon name="network"/></span><div><h3>{title}</h3><p>{subtitle}</p></div></div>
+    {usage?.available ? <>
+      <strong>{formatTraffic(trafficTotal(usage.day))}</strong><small>{t.today}</small>
+      <div className="network-transfer"><span><small>{t.upload}</small><b>↑ {formatTraffic(usage.day?.uploadBytes)}</b></span><span><small>{t.download}</small><b>↓ {formatTraffic(usage.day?.downloadBytes)}</b></span></div>
+      <div className="network-periods"><span>{t.thisMonth}<b>{formatTraffic(trafficTotal(usage.month))}</b></span><span>{t.lifetime}<b>{formatTraffic(trafficTotal(usage.lifetime))}</b></span></div>
+    </> : <p className="network-pending">{t.meterPending}</p>}
+  </article>;
 }
 
 function GameSettingCard({ game, current, locale, t, busy, onSave }) {
@@ -339,6 +373,27 @@ export default function DashboardClient({ initialUser, initialLocale = "ar" }) {
   const protectionMode = controlBots["omar-guard"]?.status?.protectionMode || "—";
   const logText = agent.logs?.[logTarget]?.[logStream] || t.noLogs;
   const enabledCommandCount = commandCatalog.filter((command) => command.policy?.enabled !== false).length;
+  const network = agent.system?.network || { processes: {}, agent: null };
+  const networkCards = [
+    {
+      title: BOT_LABELS["omar-guard"].title,
+      subtitle: t.processSockets,
+      accent: "violet",
+      usage: network.processes?.["omar-guard"]
+    },
+    {
+      title: BOT_LABELS["lobby-games-bot"].title,
+      subtitle: t.processSockets,
+      accent: "cyan",
+      usage: network.processes?.["lobby-games-bot"]
+    },
+    {
+      title: t.agentControl,
+      subtitle: t.syncPayload,
+      accent: "green",
+      usage: network.agent
+    }
+  ];
 
   function openPolicy(command) {
     setPolicyEditor({
@@ -399,6 +454,7 @@ export default function DashboardClient({ initialUser, initialLocale = "ar" }) {
             <article><span className="metric-icon green"><Icon name="cpu"/></span><div><small>{t.systemMemory}</small><strong>{formatSystemMemory(agent.system?.usedMemoryBytes)}</strong><p>Node {agent.system?.nodeVersion || "—"}</p></div><em className="metric-glow green"/></article>
             <article><span className="metric-icon violet"><Icon name="command"/></span><div><small>{t.commandCoverage}</small><strong>{enabledCommandCount} / {commandCatalog.length || "—"}</strong><p>{t.managedCommands}</p></div><em className="metric-glow violet"/></article>
           </section>
+          <section className="admin-section network-section"><SectionTitle eyebrow={t.networkEyebrow} title={t.networkUsage} note={t.networkNote}/><div className="network-grid">{networkCards.map((item) => <NetworkUsageCard key={item.title} {...item} t={t}/>)}</div></section>
           <section className="admin-section overview-split"><div className="overview-panel"><SectionTitle eyebrow={t.processControl} title={t.discordBots}/><div className="compact-bots">{processes.map((processItem) => { const label = BOT_LABELS[processItem.name]; return <button key={processItem.name} onClick={() => setView("bots")}><span className={`bot-emblem ${label.accent}`}><Icon name={label.icon}/></span><div><b>{label.title}</b><small>{label.subtitle[locale]}</small></div><em className={`status-badge ${processItem.status}`}><i/>{processItem.status}</em></button>; })}</div></div><div className="overview-panel"><SectionTitle eyebrow={t.immutableHistory} title={t.recentActivity}/><div className="activity-list">{(data?.audit || []).slice(0, 5).map((entry) => <div key={entry.id}><span><i/>{commandLabel(entry, locale)}</span><b className={`command-status ${entry.status}`}>{entry.status}</b><time>{timeAgo(entry.createdAt, locale)}</time></div>)}</div></div></section>
         </>}
 

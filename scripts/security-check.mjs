@@ -39,6 +39,22 @@ const fakeToken = `${"M".repeat(24)}.${"a".repeat(6)}.${"b".repeat(28)}`;
 const snapshot = sanitizeSnapshot({
   processes: [{ name: "omar-guard", status: "online" }, { name: "not-allowed", status: "online" }],
   logs: { "omar-guard": { out: `token=${fakeToken}` } },
+  network: {
+    processes: [{
+      name: "omar-guard",
+      available: true,
+      day: { key: "2026-07-16", uploadBytes: 100, downloadBytes: 200 },
+      month: { key: "2026-07", uploadBytes: 300, downloadBytes: 400 },
+      lifetime: { uploadBytes: 500, downloadBytes: 600 }
+    }],
+    agent: {
+      name: "team-lobby-agent",
+      available: true,
+      scope: "sync-payload",
+      day: { key: "2026-07-16", uploadBytes: 1000, downloadBytes: 2000 }
+    },
+    optimization: { pollIntervalMs: 5000, fullSnapshotIntervalMs: 60000 }
+  },
   control: {
     bots: {
       "omar-guard": {
@@ -71,6 +87,17 @@ assert.deepEqual(Object.keys(snapshot.control.bots["omar-guard"].policy.commands
 assert.equal(snapshot.control.bots["omar-guard"].policy.commands.security.cooldownSeconds, 3600);
 assert.deepEqual(snapshot.control.bots["omar-guard"].policy.commands.security.allowedRoleIds, ["538241496630165515"]);
 assert.equal(snapshot.control.bots["omar-guard"].status.protectionMode, "Lockdown");
+assert.equal(snapshot.system.network.processes["omar-guard"].day.downloadBytes, 200);
+assert.equal(snapshot.system.network.agent.scope, "sync-payload");
+assert.equal(snapshot.system.network.optimization.fullSnapshotIntervalMs, 60000);
+
+const heartbeat = sanitizeSnapshot({
+  included: { logs: false, discord: false, control: false },
+  processes: [{ name: "lobby-games-bot", status: "online" }]
+});
+assert.equal(heartbeat.logs, null);
+assert.equal(heartbeat.discord, null);
+assert.equal(heartbeat.control, null);
 
 const envExample = await readFile(new URL("../.env.example", import.meta.url), "utf8");
 for (const key of ["SUPABASE_SERVICE_ROLE_KEY", "CONTROL_AGENT_SECRET", "CONTROL_PAYLOAD_ENCRYPTION_KEY"]) {
@@ -100,6 +127,10 @@ const dashboardClient = await readFile(
 
 assert(syncRoute.includes('"complete_control_command"'));
 assert(syncRoute.includes("acknowledgedCompletionIds"));
+assert(syncRoute.includes("snapshot.included.logs"));
+assert(syncRoute.includes("snapshotProtocol: 2"));
+assert(syncRoute.includes(".update(statusUpdate)"));
+assert(syncRoute.includes("statusUpdate.logs"));
 assert(controlPlaneSql.includes("lease_expires_at"));
 assert(controlPlaneSql.includes("claim_attempts"));
 assert(controlPlaneSql.includes("complete_control_command"));
@@ -113,5 +144,7 @@ assert(overviewRoute.includes("publicAudit"));
 assert(dashboardClient.includes("(data?.audit || [])"));
 assert(dashboardClient.includes("protectionMode === mode"));
 assert(dashboardClient.includes('setConfirmAction({ type: "guard.mode.set"'));
+assert(dashboardClient.includes("NetworkUsageCard"));
+assert(dashboardClient.includes("network.processes"));
 
 console.log("Dashboard security checks passed.");

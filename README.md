@@ -19,6 +19,8 @@
 - صور أصلية محسّنة للويب وأيقونة خاصة بالموقع.
 - بيانات SEO وOpen Graph وفهرسة سليمة لمحركات البحث.
 - تحديث Next.js وReact وفحص الاعتمادات الأمنية.
+- عدادات رفع وتنزيل يومية وشهرية وإجمالية لكل من Omar Guard وLobby Games والـAgent.
+- نبضة حالة خفيفة كل 5 ثوانٍ، مع مزامنة السجلات وبيانات Discord وكتالوج التحكم كل 60 ثانية أو عند طلب التحديث.
 
 > لا تضع `SUPABASE_SERVICE_ROLE_KEY` أو `CONTROL_AGENT_SECRET` أو `CONTROL_PAYLOAD_ENCRYPTION_KEY` في أي متغير يبدأ بـ`NEXT_PUBLIC_`.
 

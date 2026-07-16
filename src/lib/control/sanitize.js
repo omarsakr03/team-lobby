@@ -24,6 +24,67 @@ function safeIds(value) {
     : [];
 }
 
+function safeBytes(value) {
+  return Math.min(Number.MAX_SAFE_INTEGER, Math.max(0, Math.floor(finite(value))));
+}
+
+function sanitizeCounter(value) {
+  return {
+    uploadBytes: safeBytes(value?.uploadBytes),
+    downloadBytes: safeBytes(value?.downloadBytes)
+  };
+}
+
+function sanitizeNetworkUsage(value, expectedName) {
+  if (!value || value.name !== expectedName || value.available !== true) {
+    return { name: expectedName, available: false };
+  }
+
+  return {
+    name: expectedName,
+    available: true,
+    measuredAt: value.measuredAt ? safeText(value.measuredAt, 40) : null,
+    sessionStartedAt: value.sessionStartedAt ? safeText(value.sessionStartedAt, 40) : null,
+    session: sanitizeCounter(value.session),
+    day: {
+      key: /^\d{4}-\d{2}-\d{2}$/.test(String(value.day?.key || "")) ? value.day.key : null,
+      ...sanitizeCounter(value.day)
+    },
+    month: {
+      key: /^\d{4}-\d{2}$/.test(String(value.month?.key || "")) ? value.month.key : null,
+      ...sanitizeCounter(value.month)
+    },
+    lifetime: sanitizeCounter(value.lifetime),
+    scope: value.scope === "sync-payload" ? "sync-payload" : "process-sockets"
+  };
+}
+
+function sanitizeNetwork(value) {
+  const sourceProcesses = Array.isArray(value?.processes) ? value.processes : [];
+  const processes = {};
+
+  for (const name of ALLOWED_PROCESSES) {
+    processes[name] = sanitizeNetworkUsage(
+      sourceProcesses.find((item) => item?.name === name),
+      name
+    );
+  }
+
+  return {
+    measuredAt: value?.measuredAt ? safeText(value.measuredAt, 40) : null,
+    processes,
+    agent: sanitizeNetworkUsage(value?.agent, "team-lobby-agent"),
+    optimization: {
+      pollIntervalMs: Math.min(60000, Math.max(0, finite(value?.optimization?.pollIntervalMs))),
+      fullSnapshotIntervalMs: Math.min(
+        600000,
+        Math.max(0, finite(value?.optimization?.fullSnapshotIntervalMs))
+      ),
+      fullSnapshot: Boolean(value?.optimization?.fullSnapshot)
+    }
+  };
+}
+
 function sanitizeControl(control) {
   const bots = {};
 
@@ -95,6 +156,13 @@ function sanitizeControl(control) {
 }
 
 export function sanitizeSnapshot(snapshot) {
+  const hasInclusionMap = snapshot?.included && typeof snapshot.included === "object";
+  const included = {
+    logs: hasInclusionMap ? Boolean(snapshot.included.logs) : snapshot?.logs != null,
+    discord: hasInclusionMap ? Boolean(snapshot.included.discord) : snapshot?.discord != null,
+    control: hasInclusionMap ? Boolean(snapshot.included.control) : snapshot?.control != null
+  };
+
   const processes = Array.isArray(snapshot?.processes)
     ? snapshot.processes
         .filter((item) => ALLOWED_PROCESSES.has(item?.name))
@@ -113,12 +181,14 @@ export function sanitizeSnapshot(snapshot) {
         }))
     : [];
 
-  const logs = {};
-  for (const name of ALLOWED_PROCESSES) {
-    logs[name] = {
-      out: safeText(snapshot?.logs?.[name]?.out),
-      error: safeText(snapshot?.logs?.[name]?.error)
-    };
+  const logs = included.logs ? {} : null;
+  if (logs) {
+    for (const name of ALLOWED_PROCESSES) {
+      logs[name] = {
+        out: safeText(snapshot?.logs?.[name]?.out),
+        error: safeText(snapshot?.logs?.[name]?.error)
+      };
+    }
   }
 
   const discord = snapshot?.discord || {};
@@ -136,11 +206,12 @@ export function sanitizeSnapshot(snapshot) {
       usedMemoryBytes: finite(snapshot?.system?.usedMemoryBytes),
       loadAverage: Array.isArray(snapshot?.system?.loadAverage)
         ? snapshot.system.loadAverage.slice(0, 3).map((value) => finite(value))
-        : []
+        : [],
+      network: sanitizeNetwork(snapshot?.network)
     },
     processes,
     logs,
-    discord: {
+    discord: included.discord ? {
       configured: Boolean(discord.configured),
       connected: Boolean(discord.connected),
       errorCode: discord.errorCode ? safeText(discord.errorCode, 80) : null,
@@ -157,8 +228,9 @@ export function sanitizeSnapshot(snapshot) {
         onlineCount: finite(guild.onlineCount),
         premiumTier: finite(guild.premiumTier)
       } : null
-    },
-    control: sanitizeControl(snapshot?.control || {})
+    } : null,
+    control: included.control ? sanitizeControl(snapshot?.control || {}) : null,
+    included
   };
 }
 
