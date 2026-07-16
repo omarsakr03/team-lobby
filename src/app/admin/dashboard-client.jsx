@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { persistClientLocale, readClientLocale } from "../../lib/locale";
 
 const BOT_LABELS = {
   "omar-guard": {
@@ -226,8 +227,8 @@ function GameSettingCard({ game, current, locale, t, busy, onSave }) {
   </article>;
 }
 
-export default function DashboardClient({ initialUser }) {
-  const [locale, setLocale] = useState("ar");
+export default function DashboardClient({ initialUser, initialLocale = "ar" }) {
+  const [locale, setLocale] = useState(initialLocale);
   const [view, setView] = useState("overview");
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
@@ -243,19 +244,18 @@ export default function DashboardClient({ initialUser }) {
   const [commandBot, setCommandBot] = useState("all");
   const [commandGroup, setCommandGroup] = useState("all");
   const [policyEditor, setPolicyEditor] = useState(null);
+  const [localeReady, setLocaleReady] = useState(false);
 
   const t = COPY[locale];
 
   useEffect(() => {
-    const saved = window.localStorage.getItem("team-lobby-control-locale");
-    if (saved === "en" || saved === "ar") setLocale(saved);
-  }, []);
+    setLocale(readClientLocale(initialLocale));
+    setLocaleReady(true);
+  }, [initialLocale]);
 
   useEffect(() => {
-    window.localStorage.setItem("team-lobby-control-locale", locale);
-    document.documentElement.lang = locale;
-    document.documentElement.dir = locale === "ar" ? "rtl" : "ltr";
-  }, [locale]);
+    if (localeReady) persistClientLocale(locale);
+  }, [locale, localeReady]);
 
   const load = useCallback(async (quiet = false) => {
     if (!quiet) setLoading(true);
@@ -365,11 +365,11 @@ export default function DashboardClient({ initialUser }) {
     }, t.policyQueued);
   }
 
-  return <main className="admin-shell" dir={locale === "ar" ? "rtl" : "ltr"}>
+  return <main className="admin-shell" dir={locale === "ar" ? "rtl" : "ltr"} lang={locale}>
     <aside className="admin-sidebar">
       <Brand />
       <nav aria-label="Dashboard navigation">{NAV_ITEMS.map(([id, icon]) => <button type="button" key={id} className={view === id ? "active" : ""} onClick={() => setView(id)}><Icon name={icon}/><span>{t[id]}</span></button>)}</nav>
-      <div className="admin-sidebar-foot"><Link href="/"><Icon name="external"/><span>{t.publicSite}</span></Link><span className={`agent-pill ${agent.online ? "online" : "offline"}`}><i />{agent.online ? t.agentOnline : t.agentOffline}</span></div>
+      <div className="admin-sidebar-foot"><Link href={`/${locale}`}><Icon name="external"/><span>{t.publicSite}</span></Link><span className={`agent-pill ${agent.online ? "online" : "offline"}`}><i />{agent.online ? t.agentOnline : t.agentOffline}</span></div>
     </aside>
 
     <div className="admin-workspace">

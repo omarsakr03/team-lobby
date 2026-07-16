@@ -1,10 +1,8 @@
-import "./styles/globals.css";
-
-export const metadata = {
+export const baseMetadata = {
   metadataBase: new URL("https://team-lobby.ddns.net"),
   title: {
     default: "Team Lobby — Find Your Squad",
-    template: "%s | Team Lobby",
+    template: "%s | Team Lobby"
   },
   description: "Find teammates, build squads, and join an Arab gaming community built for better games together.",
   keywords: ["Team Lobby", "gaming community", "find teammates", "Discord gaming", "Arab gamers"],
@@ -13,25 +11,17 @@ export const metadata = {
     description: "Meet players who match your game, rank, and vibe. Build squads, join events, and never queue alone.",
     type: "website",
     locale: "en_US",
-    siteName: "Team Lobby",
+    siteName: "Team Lobby"
   },
   twitter: {
     card: "summary_large_image",
     title: "Team Lobby — Find Your Squad",
-    description: "Meet players, build squads, and play as one.",
+    description: "Meet players, build squads, and play as one."
   },
-  robots: { index: true, follow: true },
+  robots: { index: true, follow: true }
 };
 
-export const viewport = {
+export const baseViewport = {
   themeColor: "#05060a",
-  colorScheme: "dark",
+  colorScheme: "dark"
 };
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
-  );
-}

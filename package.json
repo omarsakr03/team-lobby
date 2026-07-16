@@ -1,13 +1,15 @@
 {
   "name": "team-lobby-site",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test:security": "node scripts/security-check.mjs"
+    "test:security": "node scripts/security-check.mjs",
+    "test:i18n": "node scripts/i18n-check.mjs",
+    "check": "npm run test:security && npm run test:i18n && npm run build"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.1",

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { persistClientLocale, readClientLocale } from "../../../lib/locale";
 import SignInButton from "./sign-in-button";
 
 const copy = {
@@ -39,19 +40,23 @@ function BrandMark() {
   );
 }
 
-export default function LoginPanel({ reason }) {
-  const [language, setLanguage] = useState("en");
+export default function LoginPanel({ reason, initialLanguage = "en" }) {
+  const [language, setLanguage] = useState(initialLanguage);
+  const [localeReady, setLocaleReady] = useState(false);
   const t = copy[language];
 
   useEffect(() => {
-    const saved = window.localStorage.getItem("team-lobby-control-locale");
-    if (saved === "ar" || saved === "en") setLanguage(saved);
-  }, []);
+    setLanguage(readClientLocale(initialLanguage));
+    setLocaleReady(true);
+  }, [initialLanguage]);
+
+  useEffect(() => {
+    if (localeReady) persistClientLocale(language);
+  }, [language, localeReady]);
 
   function toggleLanguage() {
     const next = language === "en" ? "ar" : "en";
     setLanguage(next);
-    window.localStorage.setItem("team-lobby-control-locale", next);
   }
 
   return (
@@ -61,7 +66,7 @@ export default function LoginPanel({ reason }) {
       <div className="login-glow login-glow--two" />
 
       <div className="login-topbar">
-        <Link className="login-back" href="/">← {t.back}</Link>
+        <Link className="login-back" href={`/${language}`}>← {t.back}</Link>
         <button className="login-language" type="button" onClick={toggleLanguage}>
           <span aria-hidden="true">◎</span> {t.toggle}
         </button>
