@@ -7,7 +7,7 @@ export const viewport = baseViewport;
 
 export default async function PublicRootLayout({ children, params }) {
   const { locale } = await params;
-  const language = isLocale(locale) ? locale : "en";
+  const language = isLocale(locale) ? locale : "ar";
 
   return (
     <html lang={language} dir={localeDirection(language)}>

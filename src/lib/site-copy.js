@@ -31,13 +31,13 @@ export const SITE_COPY = {
     },
     discord: { title: "Join our Discord", status: "Community live" },
     hero: {
-      eyebrow: "Discord gaming community",
-      title: "FIND YOUR SQUAD.",
-      titleAccent: "OWN THE LOBBY.",
-      text: "Meet players who match your game, rank, and vibe. Build squads, join events, and never queue alone.",
-      find: "Find teammates",
+      eyebrow: "The Arab gaming home",
+      title: "YOUR TEAM IS HERE.",
+      titleAccent: "THE LOBBY STARTS NOW.",
+      text: "One community for players who want better teammates, organized lobbies, live events, and games that never feel empty.",
+      find: "Explore live lobbies",
       join: "Join Discord",
-      trust: ["Always-on lobbies", "Player-first culture", "Weekly events"]
+      trust: ["Active Arabic community", "Smart matchmaking", "Games and events"]
     },
     console: {
       title: "ACTIVE SQUAD",
@@ -184,13 +184,13 @@ export const SITE_COPY = {
     },
     discord: { title: "انضم إلى Discord", status: "المجتمع متصل" },
     hero: {
-      eyebrow: "مجتمع ألعاب على Discord",
-      title: "كَوِّن فَرِيقَك.",
-      titleAccent: "وَسَيْطِرْ عَلَى اللُّوبِي.",
-      text: "قابل لاعبين يناسبون لعبتك ورتبتك وأسلوبك. كوّن فريقًا، شارك في الفعاليات، ولا تدخل قائمة الانتظار وحدك مرة أخرى.",
-      find: "ابحث عن لاعبين",
+      eyebrow: "البيت العربي للاعبين",
+      title: "فَرِيقُكَ هُنَا.",
+      titleAccent: "وَاللُّوبِي يَبْدَأُ الآن.",
+      text: "مجتمع واحد يجمعك بلاعبين على نفس مستواك واهتماماتك، مع لوبيات منظمة وفعاليات مستمرة وتجربة لعب لا تعرف الفراغ.",
+      find: "استكشف اللوبيات",
       join: "انضم إلى Discord",
-      trust: ["لوبيات تعمل دائمًا", "ثقافة تضع اللاعبين أولًا", "فعاليات أسبوعية"]
+      trust: ["مجتمع عربي نشط", "توافق ذكي بين اللاعبين", "ألعاب وفعاليات مستمرة"]
     },
     console: {
       title: "فريق نشط",
@@ -212,8 +212,8 @@ export const SITE_COPY = {
     pulse: ["الفرق", "ملفات اللاعبين", "الرتب والخبرة", "فعاليات المجتمع", "مدعوم بالبوتات"],
     lobbiesSection: {
       eyebrow: "لوبيات مباشرة",
-      title: "فريقك القادم متصل بالفعل.",
-      text: "تصفح المجموعات النشطة، واختر أسلوب اللعب المناسب لك، ثم انضم مباشرة إلى المحادثة على Discord.",
+      title: "لاعبون جاهزون الآن. اختر فريقك وابدأ.",
+      text: "لوبيات واضحة حسب اللعبة والنمط والمستوى؛ ادخل المساحة المناسبة وانتقل مباشرة إلى فريقك على Discord.",
       live: "مباشر",
       players: "لاعبين",
       voice: "الصوت مفعّل",
@@ -227,8 +227,8 @@ export const SITE_COPY = {
     ],
     gamesSection: {
       eyebrow: "مجتمع واحد، وألعاب أكثر",
-      title: "أيًا كانت لعبتك، ستجد فريقك.",
-      text: "مساحات مرتبة لكل لعبة تسهّل الوصول إلى اللاعبين المناسبين دون البحث داخل عشرات القنوات."
+      title: "لعبتك موجودة، وفريقك ينتظرك.",
+      text: "قنوات وتجارب مرتبة لكل لعبة، لتصل إلى اللاعبين المناسبين بسرعة من دون الضياع بين عشرات القنوات."
     },
     games: [
       { mark: "V", name: "VALORANT", genre: "تصويب تكتيكي", tone: "violet" },

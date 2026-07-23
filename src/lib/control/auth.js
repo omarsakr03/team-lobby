@@ -25,6 +25,53 @@ function identityDiscordId(user) {
   return /^\d{15,25}$/.test(id) ? id : null;
 }
 
+const ADMINISTRATOR_PERMISSION = 1n << 3n;
+const DISCORD_API_BASE = "https://discord.com/api/v10";
+
+function discordAccessConfig() {
+  const guildId = String(process.env.DISCORD_GUILD_ID || "").trim();
+  const botToken = String(process.env.DISCORD_BOT_TOKEN || "").trim();
+
+  return {
+    guildId: /^\d{15,25}$/.test(guildId) ? guildId : null,
+    botToken: botToken || null
+  };
+}
+
+async function discordApi(path, botToken) {
+  const response = await fetch(`${DISCORD_API_BASE}${path}`, {
+    headers: { authorization: `Bot ${botToken}` },
+    cache: "no-store",
+    signal: AbortSignal.timeout(8000)
+  });
+
+  if (!response.ok) {
+    throw new AccessError("Could not verify Discord server permissions.", 503, "DISCORD_VERIFICATION_FAILED");
+  }
+
+  return response.json();
+}
+
+async function hasDiscordAdministratorPermission(discordId) {
+  const { guildId, botToken } = discordAccessConfig();
+  if (!guildId || !botToken) return false;
+
+  const [member, roles] = await Promise.all([
+    discordApi(`/guilds/${guildId}/members/${discordId}`, botToken),
+    discordApi(`/guilds/${guildId}/roles`, botToken)
+  ]);
+  const memberRoleIds = new Set(Array.isArray(member?.roles) ? member.roles.map(String) : []);
+
+  return Array.isArray(roles) && roles.some((role) => {
+    if (!memberRoleIds.has(String(role?.id || ""))) return false;
+    try {
+      return (BigInt(role.permissions || "0") & ADMINISTRATOR_PERMISSION) === ADMINISTRATOR_PERMISSION;
+    } catch {
+      return false;
+    }
+  });
+}
+
 export async function resolveAdminUser(userId) {
   const admin = createAdminClient();
   const { data, error } = await admin.auth.admin.getUserById(userId);
@@ -36,8 +83,19 @@ export async function resolveAdminUser(userId) {
   const discordId = identityDiscordId(data.user);
   const allowed = allowedDiscordIds();
 
-  if (!discordId || !allowed.has(discordId)) {
+  if (!discordId) {
     throw new AccessError("This Discord account is not allowed.", 403, "FORBIDDEN");
+  }
+
+  let isAdministrator = false;
+  try {
+    isAdministrator = await hasDiscordAdministratorPermission(discordId);
+  } catch (error) {
+    if (!allowed.has(discordId)) throw error;
+  }
+
+  if (!allowed.has(discordId) && !isAdministrator) {
+    throw new AccessError("This Discord account is not a server administrator.", 403, "FORBIDDEN");
   }
 
   const metadata = data.user.user_metadata || {};

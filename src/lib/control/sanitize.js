@@ -1,4 +1,4 @@
-const ALLOWED_PROCESSES = new Set(["omar-guard", "lobby-games-bot"]);
+const ALLOWED_PROCESSES = new Set(["omar-guard", "lobby-games-bot", "andonis-games-bot"]);
 const RISK_LEVELS = new Set(["low", "medium", "high", "critical"]);
 const COMMAND_NAME_PATTERN = /^[a-z0-9][a-z0-9_-]{1,39}$/;
 const SNOWFLAKE_PATTERN = /^\d{15,25}$/;
@@ -166,7 +166,7 @@ export function sanitizeSnapshot(snapshot) {
   const processes = Array.isArray(snapshot?.processes)
     ? snapshot.processes
         .filter((item) => ALLOWED_PROCESSES.has(item?.name))
-        .slice(0, 2)
+        .slice(0, ALLOWED_PROCESSES.size)
         .map((item) => ({
           name: item.name,
           status: ["online", "stopped", "errored", "launching", "missing", "unknown"].includes(item.status)

@@ -1,5 +1,5 @@
-export const SUPPORTED_LOCALES = ["en", "ar"];
-export const DEFAULT_LOCALE = "en";
+export const SUPPORTED_LOCALES = ["ar", "en"];
+export const DEFAULT_LOCALE = "ar";
 export const LOCALE_COOKIE = "team-lobby-locale";
 export const LOCALE_STORAGE_KEY = "team-lobby-locale";
 export const LEGACY_LOCALE_STORAGE_KEY = "team-lobby-control-locale";
@@ -21,9 +21,12 @@ export function localeFromAcceptLanguage(value) {
     .split(",")
     .map((item) => item.trim().split(";")[0].toLowerCase());
 
-  return languages.some((language) => language === "ar" || language.startsWith("ar-"))
-    ? "ar"
-    : DEFAULT_LOCALE;
+  for (const language of languages) {
+    if (language === "ar" || language.startsWith("ar-")) return "ar";
+    if (language === "en" || language.startsWith("en-")) return "en";
+  }
+
+  return DEFAULT_LOCALE;
 }
 
 function readCookie(name) {

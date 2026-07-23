@@ -16,6 +16,12 @@ const BOT_LABELS = {
     subtitle: { en: "Games & community", ar: "الألعاب والمجتمع" },
     accent: "cyan",
     icon: "bot"
+  },
+  "andonis-games-bot": {
+    title: "Andonis Games",
+    subtitle: { en: "Andonis game services", ar: "ألعاب وخدمات أدونيس" },
+    accent: "blue",
+    icon: "bot"
   }
 };
 
@@ -31,7 +37,7 @@ const COPY = {
     currentlyOnline: "currently online", systemMemory: "SYSTEM MEMORY USED", controlLink: "CONTROL LINK",
     live: "Live", offline: "Offline", commandCoverage: "COMMAND COVERAGE", managedCommands: "managed commands",
     processControl: "PROCESS CONTROL", discordBots: "Discord bots",
-    processNote: "Only the two whitelisted PM2 processes can be controlled.",
+    processNote: "Only the three whitelisted PM2 processes can be controlled.",
     uptime: "UPTIME", memory: "MEMORY", cpu: "CPU", restarts: "RESTARTS",
     start: "Start", restart: "Restart", stop: "Stop", queuing: "Queuing…",
     commandRegistry: "COMMAND REGISTRY", botCommands: "Bot commands",
@@ -87,7 +93,7 @@ const COPY = {
     currentlyOnline: "متصل الآن", systemMemory: "ذاكرة الجهاز المستخدمة", controlLink: "رابط التحكم",
     live: "متصل", offline: "غير متصل", commandCoverage: "تغطية الأوامر", managedCommands: "أمر مُدار",
     processControl: "التحكم في العمليات", discordBots: "بوتات Discord",
-    processNote: "التحكم مقصور على عمليتي PM2 المسموح بهما فقط.",
+    processNote: "التحكم مقصور على عمليات PM2 الثلاث المسموح بها فقط.",
     uptime: "مدة التشغيل", memory: "الذاكرة", cpu: "المعالج", restarts: "إعادات التشغيل",
     start: "تشغيل", restart: "إعادة تشغيل", stop: "إيقاف", queuing: "جارٍ الإرسال…",
     commandRegistry: "سجل الأوامر", botCommands: "أوامر البوتات",
@@ -388,6 +394,12 @@ export default function DashboardClient({ initialUser, initialLocale = "ar" }) {
       usage: network.processes?.["lobby-games-bot"]
     },
     {
+      title: BOT_LABELS["andonis-games-bot"].title,
+      subtitle: t.processSockets,
+      accent: "blue",
+      usage: network.processes?.["andonis-games-bot"]
+    },
+    {
       title: t.agentControl,
       subtitle: t.syncPayload,
       accent: "green",
@@ -447,7 +459,7 @@ export default function DashboardClient({ initialUser, initialLocale = "ar" }) {
         {loading && !data && <div className="admin-loading"><span/><p>{t.loading}</p></div>}
 
         {view === "overview" && <>
-          <section className="admin-section hero-overview"><SectionTitle eyebrow={t.liveOperations} title={t.platformOverview} note={`${t.autoRefresh} · ${t.lastSignal} ${timeAgo(agent.lastSeenAt, locale)}`}/><div className="status-ribbon"><span className={agent.online ? "ok" : "down"}><i/>{agent.online ? t.agentOnline : t.agentOffline}</span><span><Icon name="activity"/>{processes.filter((item) => item.status === "online").length}/2 {t.processesOnline}</span><span><Icon name="command"/>{enabledCommandCount}/{commandCatalog.length} {t.activeCommands}</span></div></section>
+          <section className="admin-section hero-overview"><SectionTitle eyebrow={t.liveOperations} title={t.platformOverview} note={`${t.autoRefresh} · ${t.lastSignal} ${timeAgo(agent.lastSeenAt, locale)}`}/><div className="status-ribbon"><span className={agent.online ? "ok" : "down"}><i/>{agent.online ? t.agentOnline : t.agentOffline}</span><span><Icon name="activity"/>{processes.filter((item) => item.status === "online").length}/{processes.length || 3} {t.processesOnline}</span><span><Icon name="command"/>{enabledCommandCount}/{commandCatalog.length} {t.activeCommands}</span></div></section>
           <section className="metric-grid">
             <article><span className="metric-icon violet"><Icon name="shield"/></span><div><small>{t.botHealth}</small><strong>{processes.filter((item) => item.status === "online").length} / 2</strong><p>{t.processesOnline}</p></div><em className="metric-glow violet"/></article>
             <article><span className="metric-icon cyan"><Icon name="users"/></span><div><small>{t.members}</small><strong>{guild?.memberCount?.toLocaleString() || "—"}</strong><p>{guild?.onlineCount?.toLocaleString() || "—"} {t.currentlyOnline}</p></div><em className="metric-glow cyan"/></article>

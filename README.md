@@ -5,7 +5,7 @@
 ## ما تم تنفيذه
 
 - واجهة رئيسية احترافية متجاوبة مع الكمبيوتر والموبايل.
-- موقع عام ثنائي اللغة بمسارين ثابتين `/ar` و`/en`، مع RTL/LTR حقيقي وحفظ اختيار اللغة بين الموقع والكنترول.
+- موقع عربي افتراضيًا بمسارين ثابتين `/ar` و`/en`، مع RTL/LTR حقيقي وحفظ اختيار اللغة بين الموقع والكنترول.
 - بيانات SEO مستقلة للعربية والإنجليزية وروابط `hreflang` متبادلة.
 - عرض مرئي للفرق النشطة واللاعبين والألعاب المدعومة.
 - أقسام المميزات، خطوات الانضمام، الأسئلة الشائعة، ودعوات واضحة للانضمام إلى Discord.
@@ -13,13 +13,14 @@
 - إدارة حالة البوتات، Start/Stop/Restart، السجلات، حالة Discord، الرسائل الخاصة، وسجل تدقيق.
 - كتالوج أوامر معتمد لكل بوت مع تشغيل/تعطيل الأمر، وقت تهدئة، وقوائم رتب وقنوات Discord المسموح بها.
 - أوضاع حماية Omar Guard: Passive / Active / Lockdown، وإعدادات آمنة لألعاب Lobby Games.
-- تسجيل Discord OAuth مقصور على قائمة Discord IDs محددة.
+- تسجيل Discord OAuth يسمح بقائمة المالكين المحددة أو بأي عضو لديه رتبة بصلاحية Administrator داخل السيرفر.
 - تشفير AES-256-GCM لحمولة أوامر التحكم والرسائل أثناء وجودها في قائمة الانتظار.
 - تكامل Supabase مع RLS مغلق على جداول التحكم، والوصول الخادمي فقط عبر Service Role.
 - صور أصلية محسّنة للويب وأيقونة خاصة بالموقع.
 - بيانات SEO وOpen Graph وفهرسة سليمة لمحركات البحث.
 - تحديث Next.js وReact وفحص الاعتمادات الأمنية.
-- عدادات رفع وتنزيل يومية وشهرية وإجمالية لكل من Omar Guard وLobby Games والـAgent.
+- تحكم آمن في عمليات Omar Guard وLobby Games وAndonis Games عبر PM2.
+- عدادات رفع وتنزيل يومية وشهرية وإجمالية للبوتات والـAgent.
 - نبضة حالة خفيفة كل 5 ثوانٍ، مع مزامنة السجلات وبيانات Discord وكتالوج التحكم كل 60 ثانية أو عند طلب التحديث.
 
 > لا تضع `SUPABASE_SERVICE_ROLE_KEY` أو `CONTROL_AGENT_SECRET` أو `CONTROL_PAYLOAD_ENCRYPTION_KEY` في أي متغير يبدأ بـ`NEXT_PUBLIC_`.
@@ -41,7 +42,7 @@ npm run dev
 2. فعّل Discord Provider داخل Supabase Authentication.
 3. ضع Callback URL الظاهر في Supabase داخل Discord Developer Portal.
 4. أضف `https://team-lobby.ddns.net/auth/callback` إلى Redirect URLs داخل Supabase.
-5. انسخ `.env.example` إلى `.env.local` محليًا، وأضف نفس القيم إلى Vercel Environment Variables.
+5. انسخ `.env.example` إلى `.env.local` محليًا، وأضف نفس القيم إلى Vercel Environment Variables، بما فيها `DISCORD_GUILD_ID` و`DISCORD_BOT_TOKEN` للتحقق من صلاحية Administrator.
 6. شغّل حزمة `team-lobby-agent` على جهاز Windows تحت PM2.
 
 أنشئ مفتاح تشفير حمولة الأوامر في PowerShell:

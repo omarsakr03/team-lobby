@@ -33,11 +33,11 @@ function validateStrings(value, path = "copy") {
   }
 }
 
-assert.deepEqual(SUPPORTED_LOCALES, ["en", "ar"]);
+assert.deepEqual(SUPPORTED_LOCALES, ["ar", "en"]);
 assert.equal(localeDirection("ar"), "rtl");
 assert.equal(localeDirection("en"), "ltr");
 assert.equal(normalizeLocale("ar"), "ar");
-assert.equal(normalizeLocale("unknown"), "en");
+assert.equal(normalizeLocale("unknown"), "ar");
 assert.equal(localeFromAcceptLanguage("ar-EG,ar;q=0.9,en;q=0.8"), "ar");
 assert.equal(localeFromAcceptLanguage("en-US,en;q=0.9"), "en");
 
@@ -55,7 +55,7 @@ const globalCss = await readFile(new URL("../src/app/styles/globals.css", import
 
 assert(publicPage.includes("SITE_COPY[locale]"));
 assert(publicPage.includes("LocaleSwitcher"));
-assert(publicPage.includes("languages: { en: \"/en\", ar: \"/ar\""));
+assert(publicPage.includes("languages: { ar: \"/ar\", en: \"/en\""));
 assert(publicLayout.includes("<html lang={language} dir={localeDirection(language)}>"));
 assert(redirectPage.includes("localeFromAcceptLanguage"));
 assert(redirectPage.includes("LOCALE_COOKIE"));

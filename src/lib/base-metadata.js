@@ -1,22 +1,22 @@
 export const baseMetadata = {
   metadataBase: new URL("https://team-lobby.ddns.net"),
   title: {
-    default: "Team Lobby — Find Your Squad",
+    default: "Team Lobby — كوّن فريقك",
     template: "%s | Team Lobby"
   },
-  description: "Find teammates, build squads, and join an Arab gaming community built for better games together.",
-  keywords: ["Team Lobby", "gaming community", "find teammates", "Discord gaming", "Arab gamers"],
+  description: "اعثر على لاعبين يشاركونك ألعابك وأسلوبك، وكوّن فريقك داخل مجتمع ألعاب عربي احترافي على Discord.",
+  keywords: ["Team Lobby", "مجتمع ألعاب عربي", "البحث عن لاعبين", "فرق ديسكورد", "لاعبون عرب"],
   openGraph: {
-    title: "Team Lobby — Find Your Squad. Own the Lobby.",
-    description: "Meet players who match your game, rank, and vibe. Build squads, join events, and never queue alone.",
+    title: "Team Lobby — كوّن فريقك وسيطر على اللوبي",
+    description: "قابل لاعبين يناسبون لعبتك ورتبتك وأسلوبك، وكوّن فريقًا لا يتوقف.",
     type: "website",
-    locale: "en_US",
+    locale: "ar_AR",
     siteName: "Team Lobby"
   },
   twitter: {
     card: "summary_large_image",
-    title: "Team Lobby — Find Your Squad",
-    description: "Meet players, build squads, and play as one."
+    title: "Team Lobby — كوّن فريقك",
+    description: "قابل لاعبين، كوّن فريقك، والعبوا كفريق واحد."
   },
   robots: { index: true, follow: true }
 };

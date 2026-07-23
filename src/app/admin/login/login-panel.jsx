@@ -40,7 +40,7 @@ function BrandMark() {
   );
 }
 
-export default function LoginPanel({ reason, initialLanguage = "en" }) {
+export default function LoginPanel({ reason, initialLanguage = "ar" }) {
   const [language, setLanguage] = useState(initialLanguage);
   const [localeReady, setLocaleReady] = useState(false);
   const t = copy[language];

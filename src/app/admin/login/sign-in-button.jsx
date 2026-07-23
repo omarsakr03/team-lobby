@@ -11,7 +11,7 @@ function DiscordIcon() {
   );
 }
 
-export default function SignInButton({ language = "en" }) {
+export default function SignInButton({ language = "ar" }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 

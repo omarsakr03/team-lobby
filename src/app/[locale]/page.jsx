@@ -4,7 +4,7 @@ import LocaleSwitcher from "../locale-switcher";
 import { isLocale, localeDirection, SUPPORTED_LOCALES } from "../../lib/locale";
 import { SITE_COPY } from "../../lib/site-copy";
 
-const DISCORD_URL = "https://discord.gg/b53TkmpW2R";
+const DISCORD_URL = "https://discord.gg/bt6HsKsDqS";
 
 export const dynamicParams = false;
 
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }) {
     keywords: t.meta.keywords,
     alternates: {
       canonical: `/${locale}`,
-      languages: { en: "/en", ar: "/ar", "x-default": "/en" }
+      languages: { ar: "/ar", en: "/en", "x-default": "/ar" }
     },
     openGraph: {
       title: t.meta.ogTitle,
