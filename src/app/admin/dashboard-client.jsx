@@ -27,8 +27,9 @@ const BOT_LABELS = {
 
 const COPY = {
   en: {
-    overview: "Overview", bots: "Bots", commands: "Commands", operations: "Operations",
-    logs: "Logs", messages: "Direct messages", audit: "Audit trail", publicSite: "Public site",
+    overview: "Overview", bots: "Bots", security: "Security", games: "Games",
+    members: "Members", commands: "Commands", logs: "Logs", permissions: "Permissions",
+    settings: "Settings", profile: "Profile", publicSite: "Public site",
     commandCenter: "Command center", workspace: "TEAM LOBBY / CONTROL CENTER V2",
     signOut: "Sign out", agentOnline: "Agent online", agentOffline: "Agent offline",
     liveOperations: "LIVE OPERATIONS", platformOverview: "Platform overview",
@@ -37,7 +38,7 @@ const COPY = {
     currentlyOnline: "currently online", systemMemory: "SYSTEM MEMORY USED", controlLink: "CONTROL LINK",
     live: "Live", offline: "Offline", commandCoverage: "COMMAND COVERAGE", managedCommands: "managed commands",
     processControl: "PROCESS CONTROL", discordBots: "Discord bots",
-    processNote: "Only the three whitelisted PM2 processes can be controlled.",
+    processNote: "Omar Guard and Lobby Games are controllable. Andonis remains visible as a read-only process.",
     uptime: "UPTIME", memory: "MEMORY", cpu: "CPU", restarts: "RESTARTS",
     start: "Start", restart: "Restart", stop: "Stop", queuing: "Queuing…",
     commandRegistry: "COMMAND REGISTRY", botCommands: "Bot commands",
@@ -80,11 +81,21 @@ const COPY = {
     networkNote: "Bot counters measure their Node process sockets. Agent counters measure control-sync payloads.",
     today: "Today", thisMonth: "This month", lifetime: "Lifetime",
     upload: "Upload", download: "Download", meterPending: "Waiting for the first meter sample",
-    agentControl: "Control Agent", processSockets: "Process sockets", syncPayload: "Sync payload"
+    agentControl: "Control Agent", processSockets: "Process sockets", syncPayload: "Sync payload",
+    membersOverview: "Discord membership overview", membersSourceNote: "Live totals are supplied by Discord through the Control Agent. Individual member and role records are not collected yet.",
+    guildName: "Server", onlineMembers: "Online now", boostTier: "Boost tier", discordConnection: "Discord connection",
+    permissionsCenter: "Access & command permissions", permissionsIntro: "Real command restrictions currently enforced by the bots. Dashboard access remains protected by Discord administrator checks.",
+    restrictedCommands: "Restricted commands", unrestrictedCommands: "Open commands", signedInAdmin: "Signed-in administrator",
+    settingsCenter: "Control center settings", settingsIntro: "Operational settings backed by the live agent. Interface preferences remain local to this browser.",
+    forceSync: "Request full synchronization", refreshData: "Refresh dashboard data", languagePreference: "Interface language",
+    realData: "LIVE DATA", unavailableDetail: "Detailed directory unavailable", unavailableDetailNote: "Member names and Discord roles will appear here after the bot-side directory collector is added.",
+    profileCenter: "Administrator profile", accessRole: "Dashboard access", ownerOrAdmin: "Owner / Discord Administrator",
+    agentVersion: "Agent version", lastObserved: "Last observed", auditForAccount: "Actions from this control center"
   },
   ar: {
-    overview: "نظرة عامة", bots: "البوتات", commands: "الأوامر", operations: "العمليات",
-    logs: "السجلات", messages: "الرسائل الخاصة", audit: "سجل التدقيق", publicSite: "الموقع العام",
+    overview: "نظرة عامة", bots: "البوتات", security: "الحماية", games: "الألعاب",
+    members: "الأعضاء", commands: "الأوامر", logs: "السجلات", permissions: "الصلاحيات",
+    settings: "الإعدادات", profile: "الملف الشخصي", publicSite: "الموقع العام",
     commandCenter: "مركز القيادة", workspace: "TEAM LOBBY / مركز التحكم V2",
     signOut: "تسجيل الخروج", agentOnline: "الوكيل متصل", agentOffline: "الوكيل غير متصل",
     liveOperations: "العمليات المباشرة", platformOverview: "نظرة عامة على المنصة",
@@ -93,7 +104,7 @@ const COPY = {
     currentlyOnline: "متصل الآن", systemMemory: "ذاكرة الجهاز المستخدمة", controlLink: "رابط التحكم",
     live: "متصل", offline: "غير متصل", commandCoverage: "تغطية الأوامر", managedCommands: "أمر مُدار",
     processControl: "التحكم في العمليات", discordBots: "بوتات Discord",
-    processNote: "التحكم مقصور على عمليات PM2 الثلاث المسموح بها فقط.",
+    processNote: "يمكن التحكم في Omar Guard وLobby Games، بينما تظهر عملية Andonis للقراءة فقط.",
     uptime: "مدة التشغيل", memory: "الذاكرة", cpu: "المعالج", restarts: "إعادات التشغيل",
     start: "تشغيل", restart: "إعادة تشغيل", stop: "إيقاف", queuing: "جارٍ الإرسال…",
     commandRegistry: "سجل الأوامر", botCommands: "أوامر البوتات",
@@ -136,14 +147,26 @@ const COPY = {
     networkNote: "عدادات البوتات تقيس اتصالات عملية Node نفسها، وعداد الوكيل يقيس بيانات المزامنة مع لوحة التحكم.",
     today: "اليوم", thisMonth: "هذا الشهر", lifetime: "الإجمالي",
     upload: "رفع", download: "تنزيل", meterPending: "في انتظار أول قراءة من العداد",
-    agentControl: "وكيل التحكم", processSockets: "اتصالات العملية", syncPayload: "بيانات المزامنة"
+    agentControl: "وكيل التحكم", processSockets: "اتصالات العملية", syncPayload: "بيانات المزامنة",
+    membersOverview: "ملخص أعضاء Discord", membersSourceNote: "الأعداد المباشرة تصل من Discord عبر وكيل التحكم. لا يتم جمع سجلات الأعضاء والرتب الفردية حتى الآن.",
+    guildName: "السيرفر", onlineMembers: "متصل الآن", boostTier: "مستوى الدعم", discordConnection: "اتصال Discord",
+    permissionsCenter: "صلاحيات الوصول والأوامر", permissionsIntro: "قيود الأوامر الحقيقية التي تطبقها البوتات حاليًا، مع حماية دخول اللوحة بفحص إدارة Discord.",
+    restrictedCommands: "أوامر مقيّدة", unrestrictedCommands: "أوامر مفتوحة", signedInAdmin: "المشرف المسجل",
+    settingsCenter: "إعدادات مركز التحكم", settingsIntro: "إعدادات تشغيل مرتبطة بالـAgent الحقيقي، بينما تفضيلات الواجهة محفوظة داخل المتصفح.",
+    forceSync: "طلب مزامنة كاملة", refreshData: "تحديث بيانات اللوحة", languagePreference: "لغة الواجهة",
+    realData: "بيانات مباشرة", unavailableDetail: "الدليل التفصيلي غير متاح", unavailableDetailNote: "ستظهر أسماء الأعضاء ورتب Discord هنا بعد إضافة جامع الدليل داخل البوت.",
+    profileCenter: "ملف المشرف", accessRole: "صلاحية اللوحة", ownerOrAdmin: "المالك / مسؤول Discord",
+    agentVersion: "إصدار الوكيل", lastObserved: "آخر قراءة", auditForAccount: "إجراءات مركز التحكم"
   }
 };
 
 const NAV_ITEMS = [
-  ["overview", "grid"], ["bots", "bot"], ["commands", "command"],
-  ["operations", "sliders"], ["logs", "terminal"], ["messages", "message"], ["audit", "history"]
+  ["overview", "grid"], ["bots", "bot"], ["security", "shield"], ["games", "command"],
+  ["members", "users"], ["commands", "command"], ["logs", "terminal"],
+  ["permissions", "lock"], ["settings", "sliders"], ["profile", "history"]
 ];
+
+const VALID_VIEWS = new Set(NAV_ITEMS.map(([id]) => id));
 
 function Icon({ name }) {
   const paths = {
@@ -267,9 +290,9 @@ function GameSettingCard({ game, current, locale, t, busy, onSave }) {
   </article>;
 }
 
-export default function DashboardClient({ initialUser, initialLocale = "ar" }) {
+export default function DashboardClient({ initialUser, initialLocale = "ar", initialView = "overview" }) {
   const [locale, setLocale] = useState(initialLocale);
-  const [view, setView] = useState("overview");
+  const [view, setView] = useState(VALID_VIEWS.has(initialView) ? initialView : "overview");
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -296,6 +319,23 @@ export default function DashboardClient({ initialUser, initialLocale = "ar" }) {
   useEffect(() => {
     if (localeReady) persistClientLocale(locale);
   }, [locale, localeReady]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const section = window.location.pathname.split("/").filter(Boolean)[1] || "overview";
+      setView(VALID_VIEWS.has(section) ? section : "overview");
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  function navigate(nextView) {
+    if (!VALID_VIEWS.has(nextView)) return;
+    setView(nextView);
+    const nextPath = nextView === "overview" ? "/admin" : `/admin/${nextView}`;
+    if (window.location.pathname !== nextPath) window.history.pushState({}, "", nextPath);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   const load = useCallback(async (quiet = false) => {
     if (!quiet) setLoading(true);
@@ -379,6 +419,10 @@ export default function DashboardClient({ initialUser, initialLocale = "ar" }) {
   const protectionMode = controlBots["omar-guard"]?.status?.protectionMode || "—";
   const logText = agent.logs?.[logTarget]?.[logStream] || t.noLogs;
   const enabledCommandCount = commandCatalog.filter((command) => command.policy?.enabled !== false).length;
+  const restrictedCommandCount = commandCatalog.filter((command) =>
+    (command.policy?.allowedRoleIds || []).length > 0
+    || (command.policy?.allowedChannelIds || []).length > 0
+  ).length;
   const network = agent.system?.network || { processes: {}, agent: null };
   const networkCards = [
     {
@@ -435,7 +479,7 @@ export default function DashboardClient({ initialUser, initialLocale = "ar" }) {
   return <main className="admin-shell" dir={locale === "ar" ? "rtl" : "ltr"} lang={locale}>
     <aside className="admin-sidebar">
       <Brand />
-      <nav aria-label="Dashboard navigation">{NAV_ITEMS.map(([id, icon]) => <button type="button" key={id} className={view === id ? "active" : ""} onClick={() => setView(id)}><Icon name={icon}/><span>{t[id]}</span></button>)}</nav>
+      <nav aria-label="Dashboard navigation">{NAV_ITEMS.map(([id, icon]) => <button type="button" key={id} className={view === id ? "active" : ""} onClick={() => navigate(id)}><Icon name={icon}/><span>{t[id]}</span></button>)}</nav>
       <div className="admin-sidebar-foot"><Link href={`/${locale}`}><Icon name="external"/><span>{t.publicSite}</span></Link><span className={`agent-pill ${agent.online ? "online" : "offline"}`}><i />{agent.online ? t.agentOnline : t.agentOffline}</span></div>
     </aside>
 
@@ -451,7 +495,7 @@ export default function DashboardClient({ initialUser, initialLocale = "ar" }) {
         </div>
       </header>
 
-      <div className="mobile-nav">{NAV_ITEMS.map(([id, icon]) => <button type="button" key={id} className={view === id ? "active" : ""} onClick={() => setView(id)}><Icon name={icon}/><span>{t[id]}</span></button>)}</div>
+      <div className="mobile-nav">{NAV_ITEMS.map(([id, icon]) => <button type="button" key={id} className={view === id ? "active" : ""} onClick={() => navigate(id)}><Icon name={icon}/><span>{t[id]}</span></button>)}</div>
 
       <div className="admin-content">
         {error && <div className="admin-banner error" role="alert">{error}<button onClick={() => load()}>{t.retry}</button></div>}
@@ -467,20 +511,29 @@ export default function DashboardClient({ initialUser, initialLocale = "ar" }) {
             <article><span className="metric-icon violet"><Icon name="command"/></span><div><small>{t.commandCoverage}</small><strong>{enabledCommandCount} / {commandCatalog.length || "—"}</strong><p>{t.managedCommands}</p></div><em className="metric-glow violet"/></article>
           </section>
           <section className="admin-section network-section"><SectionTitle eyebrow={t.networkEyebrow} title={t.networkUsage} note={t.networkNote}/><div className="network-grid">{networkCards.map((item) => <NetworkUsageCard key={item.title} {...item} t={t}/>)}</div></section>
-          <section className="admin-section overview-split"><div className="overview-panel"><SectionTitle eyebrow={t.processControl} title={t.discordBots}/><div className="compact-bots">{processes.map((processItem) => { const label = BOT_LABELS[processItem.name]; return <button key={processItem.name} onClick={() => setView("bots")}><span className={`bot-emblem ${label.accent}`}><Icon name={label.icon}/></span><div><b>{label.title}</b><small>{label.subtitle[locale]}</small></div><em className={`status-badge ${processItem.status}`}><i/>{processItem.status}</em></button>; })}</div></div><div className="overview-panel"><SectionTitle eyebrow={t.immutableHistory} title={t.recentActivity}/><div className="activity-list">{(data?.audit || []).slice(0, 5).map((entry) => <div key={entry.id}><span><i/>{commandLabel(entry, locale)}</span><b className={`command-status ${entry.status}`}>{entry.status}</b><time>{timeAgo(entry.createdAt, locale)}</time></div>)}</div></div></section>
+          <section className="admin-section overview-split"><div className="overview-panel"><SectionTitle eyebrow={t.processControl} title={t.discordBots}/><div className="compact-bots">{processes.map((processItem) => { const label = BOT_LABELS[processItem.name]; return <button key={processItem.name} onClick={() => navigate("bots")}><span className={`bot-emblem ${label.accent}`}><Icon name={label.icon}/></span><div><b>{label.title}</b><small>{label.subtitle[locale]}</small></div><em className={`status-badge ${processItem.status}`}><i/>{processItem.status}</em></button>; })}</div></div><div className="overview-panel"><SectionTitle eyebrow={t.immutableHistory} title={t.recentActivity}/><div className="activity-list">{(data?.audit || []).slice(0, 5).map((entry) => <div key={entry.id}><span><i/>{commandLabel(entry, locale)}</span><b className={`command-status ${entry.status}`}>{entry.status}</b><time>{timeAgo(entry.createdAt, locale)}</time></div>)}</div></div></section>
         </>}
 
-        {view === "bots" && <section className="admin-section"><SectionTitle eyebrow={t.processControl} title={t.discordBots} note={t.processNote}/><div className="bot-grid">{processes.map((processItem) => { const label = BOT_LABELS[processItem.name]; const isOnline = processItem.status === "online"; return <article className={`bot-card ${label.accent}`} key={processItem.name}><div className="bot-head"><span className="bot-emblem"><Icon name={label.icon}/></span><div><h3>{label.title}</h3><p>{label.subtitle[locale]}</p></div><span className={`status-badge ${processItem.status}`}><i/>{processItem.status}</span></div><div className="bot-stats"><span><small>{t.uptime}</small><b>{formatUptime(processItem.uptimeStartedAt)}</b></span><span><small>{t.memory}</small><b>{formatBytes(processItem.memoryBytes)}</b></span><span><small>{t.cpu}</small><b>{Number(processItem.cpuPercent || 0).toFixed(1)}%</b></span><span><small>{t.restarts}</small><b>{processItem.restarts || 0}</b></span></div><div className="bot-actions"><button className="start" disabled={!agent.online || isOnline || Boolean(busy)} onClick={() => queueCommand({ type: "process.start", target: processItem.name })}>{busy === `process.start:${processItem.name}` ? t.queuing : t.start}</button><button disabled={!agent.online || !isOnline || Boolean(busy)} onClick={() => setConfirmAction({ type: "process.restart", target: processItem.name, title: label.title })}>{t.restart}</button><button className="danger" disabled={!agent.online || !isOnline || Boolean(busy)} onClick={() => setConfirmAction({ type: "process.stop", target: processItem.name, title: label.title })}>{t.stop}</button></div></article>; })}</div></section>}
+        {view === "bots" && <section className="admin-section"><SectionTitle eyebrow={t.processControl} title={t.discordBots} note={t.processNote}/><div className="bot-grid">{processes.map((processItem) => { const label = BOT_LABELS[processItem.name]; const isOnline = processItem.status === "online"; const controllable = processItem.name !== "andonis-games-bot"; return <article className={`bot-card ${label.accent}`} key={processItem.name}><div className="bot-head"><span className="bot-emblem"><Icon name={label.icon}/></span><div><h3>{label.title}</h3><p>{label.subtitle[locale]}</p></div><span className={`status-badge ${processItem.status}`}><i/>{processItem.status}</span></div><div className="bot-stats"><span><small>{t.uptime}</small><b>{formatUptime(processItem.uptimeStartedAt)}</b></span><span><small>{t.memory}</small><b>{formatBytes(processItem.memoryBytes)}</b></span><span><small>{t.cpu}</small><b>{Number(processItem.cpuPercent || 0).toFixed(1)}%</b></span><span><small>{t.restarts}</small><b>{processItem.restarts || 0}</b></span></div><div className="bot-actions"><button className="start" disabled={!controllable || !agent.online || isOnline || Boolean(busy)} onClick={() => queueCommand({ type: "process.start", target: processItem.name })}>{busy === `process.start:${processItem.name}` ? t.queuing : t.start}</button><button disabled={!controllable || !agent.online || !isOnline || Boolean(busy)} onClick={() => setConfirmAction({ type: "process.restart", target: processItem.name, title: label.title })}>{t.restart}</button><button className="danger" disabled={!controllable || !agent.online || !isOnline || Boolean(busy)} onClick={() => setConfirmAction({ type: "process.stop", target: processItem.name, title: label.title })}>{t.stop}</button></div></article>; })}</div></section>}
 
         {view === "commands" && <section className="admin-section"><SectionTitle eyebrow={t.commandRegistry} title={t.botCommands} note={t.commandIntro}/><div className="command-toolbar"><label className="command-search"><Icon name="search"/><input value={commandSearch} onChange={(event) => setCommandSearch(event.target.value)} placeholder={t.searchCommands}/></label><select value={commandBot} onChange={(event) => setCommandBot(event.target.value)}><option value="all">{t.allBots}</option>{Object.entries(BOT_LABELS).map(([id, label]) => <option key={id} value={id}>{label.title}</option>)}</select><select value={commandGroup} onChange={(event) => setCommandGroup(event.target.value)}><option value="all">{t.allGroups}</option>{groups.map((group) => <option key={group} value={group}>{group}</option>)}</select><span className="command-count">{filteredCommands.length}</span></div><div className="command-grid">{filteredCommands.map((command) => { const restricted = command.policy.allowedRoleIds?.length || command.policy.allowedChannelIds?.length; return <article className={`command-card risk-${command.risk}`} key={`${command.target}:${command.name}`}><div className="command-card-top"><span className={`command-bot-dot ${BOT_LABELS[command.target]?.accent}`}/><code>/{command.name}</code><span className={`risk-pill ${command.risk}`}>{t[`risk${command.risk[0].toUpperCase()}${command.risk.slice(1)}`]}</span></div><h3>{command.label?.[locale] || command.name}</h3><p>{BOT_LABELS[command.target]?.title} · {command.group}</p><div className="policy-summary"><span className={command.policy.enabled !== false ? "on" : "off"}><i/>{command.policy.enabled !== false ? t.enabled : t.disabled}</span><span><Icon name="activity"/>{command.policy.cooldownSeconds || 0}s</span><span><Icon name="lock"/>{restricted ? t.restricted : t.unrestricted}</span></div><button onClick={() => openPolicy(command)}><Icon name="sliders"/>{t.configure}</button></article>; })}{!filteredCommands.length && <p className="empty-state">{t.noMatches}</p>}</div></section>}
 
-        {view === "operations" && <><section className="admin-section"><SectionTitle eyebrow={t.operationsDesk} title={t.safeActions} note={t.operationsIntro}/><div className="guard-mode-panel"><div className="guard-mode-copy"><span className="bot-emblem violet"><Icon name="shield"/></span><div><small>{t.protectionStatus}</small><h3>{t.guardMode}</h3><p>{t.guardModeIntro}</p></div><strong>{t.current}: {protectionMode}</strong></div><div className="mode-buttons">{[["Passive", "passive"], ["Active", "active"], ["Lockdown", "lockdown"]].map(([mode, key]) => <button key={mode} className={`${mode.toLowerCase()} ${protectionMode === mode ? "selected" : ""}`} disabled={!agent.online || Boolean(busy) || protectionMode === mode} onClick={() => setConfirmAction({ type: "guard.mode.set", target: "omar-guard", payload: { mode }, title: `${t.guardMode}: ${t[key]}` })}><i/>{t[key]}{protectionMode === mode && <small>{t.current}</small>}</button>)}</div></div></section><section className="admin-section"><SectionTitle eyebrow={t.gameSettings} title={t.gameTuning} note={t.gameTuningIntro}/><div className="game-settings-grid">{gameCommands.map((game) => <GameSettingCard key={game.name} game={game} current={gameStatusMap.get(game.name)} locale={locale} t={t} busy={busy === "games.settings.update:lobby-games-bot"} onSave={(payload) => queueCommand({ type: "games.settings.update", target: "lobby-games-bot", payload }, t.gameQueued)}/>)}</div></section></>}
+        {view === "security" && <section className="admin-section"><SectionTitle eyebrow={t.operationsDesk} title={t.safeActions} note={t.operationsIntro}/><div className="guard-mode-panel"><div className="guard-mode-copy"><span className="bot-emblem violet"><Icon name="shield"/></span><div><small>{t.protectionStatus}</small><h3>{t.guardMode}</h3><p>{t.guardModeIntro}</p></div><strong>{t.current}: {protectionMode}</strong></div><div className="mode-buttons">{[["Passive", "passive"], ["Active", "active"], ["Lockdown", "lockdown"]].map(([mode, key]) => <button key={mode} className={`${mode.toLowerCase()} ${protectionMode === mode ? "selected" : ""}`} disabled={!agent.online || Boolean(busy) || protectionMode === mode} onClick={() => setConfirmAction({ type: "guard.mode.set", target: "omar-guard", payload: { mode }, title: `${t.guardMode}: ${t[key]}` })}><i/>{t[key]}{protectionMode === mode && <small>{t.current}</small>}</button>)}</div></div></section>}
+
+        {view === "games" && <section className="admin-section"><SectionTitle eyebrow={t.gameSettings} title={t.gameTuning} note={t.gameTuningIntro}/><div className="game-settings-grid">{gameCommands.map((game) => <GameSettingCard key={game.name} game={game} current={gameStatusMap.get(game.name)} locale={locale} t={t} busy={busy === "games.settings.update:lobby-games-bot"} onSave={(payload) => queueCommand({ type: "games.settings.update", target: "lobby-games-bot", payload }, t.gameQueued)}/>)}</div></section>}
 
         {view === "logs" && <section className="admin-section"><SectionTitle eyebrow={t.safeLogStream} title={t.runtimeLogs} action={<button className="outline-button" disabled={!agent.online || Boolean(busy)} onClick={() => queueCommand({ type: "logs.refresh" })}><Icon name="refresh"/>{t.refresh}</button>}/><div className="log-panel"><div className="log-toolbar"><div>{Object.keys(BOT_LABELS).map((name) => <button key={name} className={logTarget === name ? "active" : ""} onClick={() => setLogTarget(name)}>{BOT_LABELS[name].title}</button>)}</div><div><button className={logStream === "out" ? "active" : ""} onClick={() => setLogStream("out")}>{t.output}</button><button className={logStream === "error" ? "active" : ""} onClick={() => setLogStream("error")}>{t.errors}</button></div></div><pre aria-label={`${BOT_LABELS[logTarget].title} ${logStream} log`}>{logText}</pre><p>{t.logsSafe}</p></div></section>}
 
-        {view === "messages" && <section className="admin-section message-grid"><div><SectionTitle eyebrow={t.ownerWorkflow} title={t.dmCenter}/><p className="section-intro">{t.dmIntro}</p><div className="message-rules"><span><i/>{t.maxCharacters}</span><span><i/>{t.rateLimit}</span><span><i/>{t.reviewRequired}</span></div></div><form className="dm-form" onSubmit={(event) => { event.preventDefault(); setDmReview(true); }}><label>{t.discordUserId}<input value={dm.userId} onChange={(event) => setDm({ ...dm, userId: event.target.value.replace(/\D/g, "").slice(0, 25) })} placeholder="123456789012345678" inputMode="numeric" required minLength={15} maxLength={25}/></label><label>{t.message}<textarea value={dm.content} onChange={(event) => setDm({ ...dm, content: event.target.value.slice(0, 1800) })} placeholder={t.writeMessage} rows={7} required maxLength={1800}/><span>{dm.content.length} / 1800</span></label><button type="submit" disabled={!agent.online || Boolean(busy)}>{t.reviewMessage}<span>→</span></button></form></section>}
+        {view === "members" && <>
+          <section className="admin-section"><SectionTitle eyebrow={t.realData} title={t.membersOverview} note={t.membersSourceNote}/><div className="truth-grid"><article><span className="metric-icon cyan"><Icon name="users"/></span><small>{t.guildName}</small><strong>{guild?.name || "—"}</strong></article><article><span className="metric-icon violet"><Icon name="users"/></span><small>{t.members}</small><strong>{guild?.memberCount?.toLocaleString() || "—"}</strong></article><article><span className="metric-icon green"><Icon name="activity"/></span><small>{t.onlineMembers}</small><strong>{guild?.onlineCount?.toLocaleString() || "—"}</strong></article><article><span className="metric-icon blue"><Icon name="shield"/></span><small>{t.boostTier}</small><strong>{guild?.premiumTier ?? "—"}</strong></article></div><div className="data-source-note"><Icon name="users"/><div><b>{t.unavailableDetail}</b><p>{t.unavailableDetailNote}</p></div></div></section>
+          <section className="admin-section message-grid"><div><SectionTitle eyebrow={t.ownerWorkflow} title={t.dmCenter}/><p className="section-intro">{t.dmIntro}</p><div className="message-rules"><span><i/>{t.maxCharacters}</span><span><i/>{t.rateLimit}</span><span><i/>{t.reviewRequired}</span></div></div><form className="dm-form" onSubmit={(event) => { event.preventDefault(); setDmReview(true); }}><label>{t.discordUserId}<input value={dm.userId} onChange={(event) => setDm({ ...dm, userId: event.target.value.replace(/\D/g, "").slice(0, 25) })} placeholder="123456789012345678" inputMode="numeric" required minLength={15} maxLength={25}/></label><label>{t.message}<textarea value={dm.content} onChange={(event) => setDm({ ...dm, content: event.target.value.slice(0, 1800) })} placeholder={t.writeMessage} rows={7} required maxLength={1800}/><span>{dm.content.length} / 1800</span></label><button type="submit" disabled={!agent.online || Boolean(busy)}>{t.reviewMessage}<span>→</span></button></form></section>
+        </>}
 
-        {view === "audit" && <section className="admin-section"><SectionTitle eyebrow={t.immutableHistory} title={t.recentActivity} note={t.auditIntro}/><div className="audit-table"><div className="audit-row audit-head"><span>{t.action}</span><span>{t.target}</span><span>{t.status}</span><span>{t.when}</span></div>{(data?.audit || []).length ? data.audit.map((entry) => <div className="audit-row" key={entry.id}><span><i/>{commandLabel(entry, locale)}</span><span>{entry.target ? BOT_LABELS[entry.target]?.title || entry.target : "Control agent"}</span><span><b className={`command-status ${entry.status}`}>{entry.status}</b>{entry.errorMessage && <small>{entry.errorMessage}</small>}</span><time>{timeAgo(entry.createdAt, locale)}</time></div>) : <p className="empty-state">{t.noActions}</p>}</div></section>}
+        {view === "permissions" && <section className="admin-section"><SectionTitle eyebrow={t.realData} title={t.permissionsCenter} note={t.permissionsIntro}/><div className="permission-summary-grid"><article><Icon name="lock"/><small>{t.restrictedCommands}</small><strong>{restrictedCommandCount}</strong><button onClick={() => navigate("commands")}>{t.configure}</button></article><article><Icon name="command"/><small>{t.unrestrictedCommands}</small><strong>{Math.max(0, commandCatalog.length - restrictedCommandCount)}</strong><button onClick={() => navigate("commands")}>{t.commandSettings}</button></article><article><Icon name="shield"/><small>{t.signedInAdmin}</small><strong>{user.name}</strong><span>{user.discordId}</span></article></div></section>}
+
+        {view === "settings" && <><section className="admin-section"><SectionTitle eyebrow={t.realData} title={t.settingsCenter} note={t.settingsIntro}/><div className="settings-actions"><article><Icon name="globe"/><div><small>{t.languagePreference}</small><strong>{locale === "ar" ? "العربية" : "English"}</strong></div><button onClick={() => setLocale(locale === "ar" ? "en" : "ar")}>{locale === "ar" ? "English" : "العربية"}</button></article><article><Icon name="refresh"/><div><small>{t.refreshData}</small><strong>{timeAgo(agent.lastSeenAt, locale)}</strong></div><button onClick={() => load()} disabled={loading}>{t.refresh}</button></article><article><Icon name="activity"/><div><small>{t.forceSync}</small><strong>{agent.online ? t.agentOnline : t.agentOffline}</strong></div><button onClick={() => queueCommand({ type: "status.refresh" })} disabled={!agent.online || Boolean(busy)}>{t.forceSync}</button></article></div></section><section className="admin-section network-section"><SectionTitle eyebrow={t.networkEyebrow} title={t.networkUsage} note={t.networkNote}/><div className="network-grid">{networkCards.map((item) => <NetworkUsageCard key={item.title} {...item} t={t}/>)}</div></section></>}
+
+        {view === "profile" && <><section className="admin-section profile-summary"><div className="profile-identity">{user.avatarUrl ? <img src={user.avatarUrl} alt="" /> : <span className="avatar-fallback">O</span>}<div><small>{t.profileCenter}</small><h2>{user.name}</h2><p>{user.discordId}</p></div></div><div className="profile-facts"><span><small>{t.accessRole}</small><b>{t.ownerOrAdmin}</b></span><span><small>{t.agentVersion}</small><b>{agent.version || "—"}</b></span><span><small>{t.lastObserved}</small><b>{timeAgo(agent.observedAt, locale)}</b></span></div></section><section className="admin-section"><SectionTitle eyebrow={t.auditForAccount} title={t.recentActivity} note={t.auditIntro}/><div className="audit-table"><div className="audit-row audit-head"><span>{t.action}</span><span>{t.target}</span><span>{t.status}</span><span>{t.when}</span></div>{(data?.audit || []).length ? data.audit.map((entry) => <div className="audit-row" key={entry.id}><span><i/>{commandLabel(entry, locale)}</span><span>{entry.target ? BOT_LABELS[entry.target]?.title || entry.target : "Control agent"}</span><span><b className={`command-status ${entry.status}`}>{entry.status}</b>{entry.errorMessage && <small>{entry.errorMessage}</small>}</span><time>{timeAgo(entry.createdAt, locale)}</time></div>) : <p className="empty-state">{t.noActions}</p>}</div></section></>}
       </div>
     </div>
 

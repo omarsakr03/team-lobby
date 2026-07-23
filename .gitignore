@@ -1,5 +1,15 @@
 node_modules
 .next
-.env
-.vercel
-.env*
+.env.env.*
+!.env.example
+node_modules/
+.next/
+.vercel/
+logs/
+_runtime/
+*.log
+
+# Local environment secrets
+/.env
+/.env.*
+!/.env.example

@@ -24,5 +24,5 @@ export default async function AdminPage() {
   const cookieStore = await cookies();
   const initialLocale = normalizeLocale(cookieStore.get(LOCALE_COOKIE)?.value, DEFAULT_LOCALE);
 
-  return <DashboardClient initialUser={user} initialLocale={initialLocale} />;
+  return <DashboardClient initialUser={user} initialLocale={initialLocale} initialView="overview" />;
 }
