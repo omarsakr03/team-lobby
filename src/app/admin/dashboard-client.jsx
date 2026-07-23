@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { persistClientLocale, readClientLocale } from "../../lib/locale";
 
+const CONTROL_RELEASE = "3.1.0";
+
 const BOT_LABELS = {
   "omar-guard": {
     title: "Omar Guard",
@@ -30,7 +32,7 @@ const COPY = {
     overview: "Overview", bots: "Bots", security: "Security", games: "Games",
     members: "Members", commands: "Commands", logs: "Logs", permissions: "Permissions",
     settings: "Settings", profile: "Profile", publicSite: "Public site",
-    commandCenter: "Command center", workspace: "TEAM LOBBY / CONTROL CENTER V2",
+    commandCenter: "Command deck", workspace: "TEAM LOBBY / LIVE CONTROL 3.1",
     signOut: "Sign out", agentOnline: "Agent online", agentOffline: "Agent offline",
     liveOperations: "LIVE OPERATIONS", platformOverview: "Platform overview",
     autoRefresh: "Auto-refreshes every five seconds", lastSignal: "Last agent signal",
@@ -92,13 +94,17 @@ const COPY = {
     profileCenter: "Administrator profile", accessRole: "Dashboard access", ownerOrAdmin: "Owner / Discord Administrator",
     agentVersion: "Agent version", lastObserved: "Last observed", auditForAccount: "Actions from this control center",
     componentVersion: "VERSION", readiness: "READINESS", ready: "Ready", degraded: "Degraded",
-    readOnly: "Read-only", stableRelease: "Stable release"
+    readOnly: "Read-only", stableRelease: "Stable release",
+    fleetLive: "LIVE FLEET", fleetTitle: "Everything important, in one view",
+    fleetIntro: "Versions, readiness and live resource usage for every Team Lobby service.",
+    release: "Release", lastUpdate: "Last update", operationsNominal: "Operations nominal",
+    openFleet: "Open fleet controls", resourcePulse: "RESOURCE PULSE", connectedServices: "connected services"
   },
   ar: {
     overview: "نظرة عامة", bots: "البوتات", security: "الحماية", games: "الألعاب",
     members: "الأعضاء", commands: "الأوامر", logs: "السجلات", permissions: "الصلاحيات",
     settings: "الإعدادات", profile: "الملف الشخصي", publicSite: "الموقع العام",
-    commandCenter: "مركز القيادة", workspace: "TEAM LOBBY / مركز التحكم V2",
+    commandCenter: "غرفة القيادة", workspace: "TEAM LOBBY / التحكم المباشر 3.1",
     signOut: "تسجيل الخروج", agentOnline: "الوكيل متصل", agentOffline: "الوكيل غير متصل",
     liveOperations: "العمليات المباشرة", platformOverview: "نظرة عامة على المنصة",
     autoRefresh: "تحديث تلقائي كل خمس ثوانٍ", lastSignal: "آخر إشارة للوكيل",
@@ -160,7 +166,11 @@ const COPY = {
     profileCenter: "ملف المشرف", accessRole: "صلاحية اللوحة", ownerOrAdmin: "المالك / مسؤول Discord",
     agentVersion: "إصدار الوكيل", lastObserved: "آخر قراءة", auditForAccount: "إجراءات مركز التحكم",
     componentVersion: "الإصدار", readiness: "الجاهزية", ready: "جاهز", degraded: "يحتاج مراجعة",
-    readOnly: "للقراءة فقط", stableRelease: "إصدار مستقر"
+    readOnly: "للقراءة فقط", stableRelease: "إصدار مستقر",
+    fleetLive: "الأسطول المباشر", fleetTitle: "كل ما يهمك في شاشة واحدة",
+    fleetIntro: "الإصدار والجاهزية واستهلاك الموارد المباشر لكل خدمة في Team Lobby.",
+    release: "الإصدار", lastUpdate: "آخر تحديث", operationsNominal: "العمليات مستقرة",
+    openFleet: "فتح تحكم البوتات", resourcePulse: "نبض الموارد", connectedServices: "خدمات متصلة"
   }
 };
 
@@ -196,7 +206,7 @@ function Icon({ name }) {
 }
 
 function Brand() {
-  return <span className="admin-brand"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 3 42 13v22L24 45 6 35V13L24 3Z"/><path d="m24 10 11 6v14l-11 8-11-8V16l11-6Z"/><path d="M17 18h14v5h-4.5v9h-5v-9H17v-5Z"/></svg><span>TEAM <b>LOBBY</b><small>CONTROL V2</small></span></span>;
+  return <span className="admin-brand"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 3 42 13v22L24 45 6 35V13L24 3Z"/><path d="m24 10 11 6v14l-11 8-11-8V16l11-6Z"/><path d="M17 18h14v5h-4.5v9h-5v-9H17v-5Z"/></svg><span>TEAM <b>LOBBY</b><small>LIVE CONTROL 3.1</small></span></span>;
 }
 
 function formatBytes(value) {
@@ -274,6 +284,33 @@ function NetworkUsageCard({ title, subtitle, usage, accent, t }) {
       <div className="network-periods"><span>{t.thisMonth}<b>{formatTraffic(trafficTotal(usage.month))}</b></span><span>{t.lifetime}<b>{formatTraffic(trafficTotal(usage.lifetime))}</b></span></div>
     </> : <p className="network-pending">{t.meterPending}</p>}
   </article>;
+}
+
+function FleetStatusCard({ processItem, component, locale, t, onOpen }) {
+  const label = BOT_LABELS[processItem.name];
+  const isOnline = processItem.status === "online";
+  const runtimeReady = isOnline && (component?.runtime?.ready ?? component?.heartbeat?.fresh ?? true);
+  const version = component?.version || processItem.version || "—";
+  const versionLabel = version === "—" ? version : `v${version}`;
+
+  return <button className={`fleet-status-card ${label.accent}`} type="button" onClick={onOpen}>
+    <span className="fleet-card-rail" />
+    <span className="fleet-card-head">
+      <span className={`bot-emblem ${label.accent}`}><Icon name={label.icon}/></span>
+      <span><b>{label.title}</b><small>{label.subtitle[locale]}</small></span>
+      <em className={`status-badge ${processItem.status}`}><i/>{processItem.status}</em>
+    </span>
+    <span className="fleet-version-row">
+      <span><small>{t.componentVersion}</small><b>{versionLabel}</b></span>
+      <span><small>{t.readiness}</small><b className={runtimeReady ? "readiness-ready" : "readiness-degraded"}>{runtimeReady ? t.ready : t.degraded}</b></span>
+    </span>
+    <span className="fleet-resource-row">
+      <span><small>{t.cpu}</small><b>{Number(processItem.cpuPercent || 0).toFixed(1)}%</b></span>
+      <span><small>{t.memory}</small><b>{formatBytes(processItem.memoryBytes)}</b></span>
+      <span><small>{t.uptime}</small><b>{formatUptime(processItem.uptimeStartedAt)}</b></span>
+    </span>
+    <span className="fleet-card-foot"><span><i className={runtimeReady ? "ready" : "degraded"}/>{runtimeReady ? t.operationsNominal : t.degraded}</span><b>{t.openFleet} <span aria-hidden="true">↗</span></b></span>
+  </button>;
 }
 
 function GameSettingCard({ game, current, locale, t, busy, onSave }) {
@@ -499,6 +536,7 @@ export default function DashboardClient({ initialUser, initialLocale = "ar", ini
       <header className="admin-topbar">
         <div><span className="admin-kicker">{t.workspace}</span><h1>{t.commandCenter}</h1></div>
         <div className="admin-user">
+          <span className="release-pill"><i/>v{CONTROL_RELEASE}</span>
           <button className="locale-button" type="button" onClick={() => setLocale(locale === "ar" ? "en" : "ar")}><Icon name="globe"/><span>{locale === "ar" ? "EN" : "عربي"}</span></button>
           <button className="icon-button" onClick={() => load()} aria-label="Refresh dashboard" disabled={loading}><Icon name="refresh"/></button>
           <span className="admin-user-copy"><b>{user.name}</b><small>{user.discordId}</small></span>
@@ -515,7 +553,19 @@ export default function DashboardClient({ initialUser, initialLocale = "ar", ini
         {loading && !data && <div className="admin-loading"><span/><p>{t.loading}</p></div>}
 
         {view === "overview" && <>
-          <section className="admin-section hero-overview"><SectionTitle eyebrow={t.liveOperations} title={t.platformOverview} note={`${t.autoRefresh} · ${t.lastSignal} ${timeAgo(agent.lastSeenAt, locale)}`}/><div className="status-ribbon"><span className={agent.online ? "ok" : "down"}><i/>{agent.online ? t.agentOnline : t.agentOffline}</span><span><Icon name="activity"/>{processes.filter((item) => item.status === "online").length}/{processes.length || 3} {t.processesOnline}</span><span><Icon name="command"/>{enabledCommandCount}/{commandCatalog.length} {t.activeCommands}</span></div></section>
+          <section className="admin-section mission-hero">
+            <div className="mission-copy">
+              <span className="mission-eyebrow"><i/>{t.fleetLive}</span>
+              <h2>{t.fleetTitle}</h2>
+              <p>{t.fleetIntro}</p>
+              <div className="status-ribbon"><span className={agent.online ? "ok" : "down"}><i/>{agent.online ? t.agentOnline : t.agentOffline}</span><span><Icon name="activity"/>{processes.filter((item) => item.status === "online").length}/{processes.length || 3} {t.connectedServices}</span><span><Icon name="command"/>{enabledCommandCount}/{commandCatalog.length} {t.activeCommands}</span></div>
+            </div>
+            <div className="mission-orbit">
+              <span className="orbit-ring"><strong>{healthyComponents}<small>/{totalComponents}</small></strong><em>{t.ready}</em></span>
+              <span className="mission-meta"><span><small>{t.release}</small><b>v{CONTROL_RELEASE}</b></span><span><small>{t.lastUpdate}</small><b>{timeAgo(agent.lastSeenAt, locale)}</b></span></span>
+            </div>
+          </section>
+          <section className="admin-section fleet-overview"><SectionTitle eyebrow={t.resourcePulse} title={t.discordBots} note={t.autoRefresh}/><div className="fleet-status-grid">{processes.map((processItem) => <FleetStatusCard key={processItem.name} processItem={processItem} component={componentByName.get(processItem.name)} locale={locale} t={t} onOpen={() => navigate("bots")}/>)}</div></section>
           <section className="metric-grid">
             <article><span className="metric-icon violet"><Icon name="shield"/></span><div><small>{t.botHealth}</small><strong>{healthyComponents} / {totalComponents}</strong><p>{t.processesOnline}</p></div><em className="metric-glow violet"/></article>
             <article><span className="metric-icon cyan"><Icon name="users"/></span><div><small>{t.members}</small><strong>{guild?.memberCount?.toLocaleString() || "—"}</strong><p>{guild?.onlineCount?.toLocaleString() || "—"} {t.currentlyOnline}</p></div><em className="metric-glow cyan"/></article>
