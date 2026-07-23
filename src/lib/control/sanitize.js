@@ -85,6 +85,82 @@ function sanitizeNetwork(value) {
   };
 }
 
+function sanitizeRuntime(value, expectedName) {
+  if (!value || value.component !== expectedName) return null;
+
+  return {
+    component: expectedName,
+    version: value.version ? safeText(value.version, 40) : null,
+    releaseChannel: safeText(value.releaseChannel || "stable", 20),
+    ready: Boolean(value.ready),
+    pid: Math.max(0, Math.floor(finite(value.pid))),
+    uptimeSeconds: Math.max(0, Math.floor(finite(value.uptimeSeconds))),
+    memoryBytes: safeBytes(value.memoryBytes),
+    discordPingMs:
+      value.discordPingMs == null
+        ? null
+        : Math.min(60000, Math.max(0, finite(value.discordPingMs))),
+    guildCount: Math.max(0, Math.floor(finite(value.guildCount))),
+    commandCount: Math.max(0, Math.floor(finite(value.commandCount))),
+    database: value.database === "ready" ? "ready" : "degraded",
+    capabilities: Array.isArray(value.capabilities)
+      ? Array.from(
+          new Set(
+            value.capabilities
+              .map((item) => safeText(item, 60))
+              .filter((item) => /^[a-z0-9-]+$/.test(item))
+          )
+        ).slice(0, 20)
+      : []
+  };
+}
+
+function sanitizeFleet(value) {
+  const source = Array.isArray(value?.components) ? value.components : [];
+  const components = [];
+
+  for (const name of ALLOWED_PROCESSES) {
+    const item = source.find((candidate) => candidate?.name === name);
+    if (!item) continue;
+    components.push({
+      name,
+      installed: Boolean(item.installed),
+      version: item.version ? safeText(item.version, 40) : null,
+      entrypointReady: Boolean(item.entrypointReady),
+      controllable: item.controllable !== false,
+      processStatus: [
+        "online",
+        "stopped",
+        "errored",
+        "launching",
+        "missing",
+        "unknown"
+      ].includes(item.processStatus)
+        ? item.processStatus
+        : "unknown",
+      heartbeat: {
+        updatedAt: item.heartbeat?.updatedAt
+          ? safeText(item.heartbeat.updatedAt, 40)
+          : null,
+        ageSeconds:
+          item.heartbeat?.ageSeconds == null
+            ? null
+            : Math.max(0, Math.floor(finite(item.heartbeat.ageSeconds))),
+        fresh: Boolean(item.heartbeat?.fresh)
+      },
+      runtime: sanitizeRuntime(item.runtime, name)
+    });
+  }
+
+  return {
+    schemaVersion: 1,
+    measuredAt: value?.measuredAt ? safeText(value.measuredAt, 40) : null,
+    healthy: Math.min(components.length, Math.max(0, Math.floor(finite(value?.healthy)))),
+    total: components.length,
+    components
+  };
+}
+
 function sanitizeControl(control) {
   const bots = {};
 
@@ -148,7 +224,10 @@ function sanitizeControl(control) {
         updatedAt: source.policy?.updatedAt || null,
         commands
       },
-      status
+      status: {
+        ...status,
+        runtime: sanitizeRuntime(source.status?.runtime, target)
+      }
     };
   }
 
@@ -207,7 +286,8 @@ export function sanitizeSnapshot(snapshot) {
       loadAverage: Array.isArray(snapshot?.system?.loadAverage)
         ? snapshot.system.loadAverage.slice(0, 3).map((value) => finite(value))
         : [],
-      network: sanitizeNetwork(snapshot?.network)
+      network: sanitizeNetwork(snapshot?.network),
+      fleet: sanitizeFleet(snapshot?.system?.fleet)
     },
     processes,
     logs,

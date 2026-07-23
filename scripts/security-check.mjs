@@ -38,6 +38,29 @@ assert.throws(() => decryptPayload({
 const fakeToken = `${"M".repeat(24)}.${"a".repeat(6)}.${"b".repeat(28)}`;
 const snapshot = sanitizeSnapshot({
   processes: [{ name: "omar-guard", status: "online" }, { name: "not-allowed", status: "online" }],
+  system: {
+    fleet: {
+      healthy: 1,
+      components: [
+        {
+          name: "omar-guard",
+          installed: true,
+          version: "1.0.0",
+          entrypointReady: true,
+          controllable: true,
+          processStatus: "online",
+          heartbeat: { updatedAt: "2026-07-23T00:00:00.000Z", ageSeconds: 4, fresh: true },
+          runtime: {
+            component: "omar-guard",
+            version: "1.0.0",
+            ready: true,
+            capabilities: ["process-health", "../../unsafe"]
+          }
+        },
+        { name: "../../unsafe", installed: true }
+      ]
+    }
+  },
   logs: { "omar-guard": { out: `token=${fakeToken}` } },
   network: {
     processes: [{
@@ -90,6 +113,12 @@ assert.equal(snapshot.control.bots["omar-guard"].status.protectionMode, "Lockdow
 assert.equal(snapshot.system.network.processes["omar-guard"].day.downloadBytes, 200);
 assert.equal(snapshot.system.network.agent.scope, "sync-payload");
 assert.equal(snapshot.system.network.optimization.fullSnapshotIntervalMs, 60000);
+assert.equal(snapshot.system.fleet.components.length, 1);
+assert.equal(snapshot.system.fleet.components[0].version, "1.0.0");
+assert.deepEqual(
+  snapshot.system.fleet.components[0].runtime.capabilities,
+  ["process-health"]
+);
 
 const heartbeat = sanitizeSnapshot({
   included: { logs: false, discord: false, control: false },
@@ -129,6 +158,7 @@ assert(syncRoute.includes('"complete_control_command"'));
 assert(syncRoute.includes("acknowledgedCompletionIds"));
 assert(syncRoute.includes("snapshot.included.logs"));
 assert(syncRoute.includes("snapshotProtocol: 2"));
+assert(syncRoute.includes("readLimitedJson"));
 assert(syncRoute.includes(".update(statusUpdate)"));
 assert(syncRoute.includes("statusUpdate.logs"));
 assert(controlPlaneSql.includes("lease_expires_at"));
@@ -140,6 +170,7 @@ assert(controlPlaneSql.includes("prevent_control_audit_mutation"));
 assert(commandRoute.includes("recordedAudit"));
 assert(commandRoute.includes("auditError"));
 assert(commandRoute.includes("CONTROL_RATE_LIMITED"));
+assert(commandRoute.includes("PAYLOAD_TOO_LARGE"));
 assert(overviewRoute.includes("publicAudit"));
 assert(dashboardClient.includes("(data?.audit || [])"));
 assert(dashboardClient.includes("protectionMode === mode"));

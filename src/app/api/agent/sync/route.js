@@ -33,6 +33,24 @@ function isUuid(value) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 }
 
+async function readLimitedJson(request, maximumBytes) {
+  const contentType = request.headers.get("content-type") || "";
+  if (!contentType.toLowerCase().startsWith("application/json")) {
+    return { error: "JSON content type is required.", status: 415 };
+  }
+
+  const text = await request.text();
+  if (Buffer.byteLength(text, "utf8") > maximumBytes) {
+    return { error: "Payload too large.", status: 413 };
+  }
+
+  try {
+    return { value: JSON.parse(text) };
+  } catch {
+    return { error: "Invalid JSON payload.", status: 400 };
+  }
+}
+
 export async function POST(request) {
   const agentId = authenticateAgent(request);
 
@@ -40,13 +58,12 @@ export async function POST(request) {
     return NextResponse.json({ error: "Unauthorized agent." }, { status: 401 });
   }
 
-  const length = Number(request.headers.get("content-length") || 0);
-  if (length > 180000) {
-    return NextResponse.json({ error: "Payload too large." }, { status: 413 });
-  }
-
   try {
-    const body = await request.json();
+    const parsed = await readLimitedJson(request, 180000);
+    if (parsed.error) {
+      return NextResponse.json({ error: parsed.error }, { status: parsed.status });
+    }
+    const body = parsed.value;
     const snapshot = sanitizeSnapshot(body?.snapshot || {});
     const completions = Array.isArray(body?.completions)
       ? body.completions.slice(0, 10).map(sanitizeCompletion)

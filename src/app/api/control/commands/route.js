@@ -19,6 +19,28 @@ const GAME_KEYS = new Set([
   "guess", "guesscountry", "fasttype", "math", "sortnumbers"
 ]);
 
+async function readLimitedJson(request, maximumBytes = 24000) {
+  const contentType = request.headers.get("content-type") || "";
+  if (!contentType.toLowerCase().startsWith("application/json")) {
+    throw new AccessError(
+      "JSON content type is required.",
+      415,
+      "UNSUPPORTED_MEDIA_TYPE"
+    );
+  }
+
+  const text = await request.text();
+  if (Buffer.byteLength(text, "utf8") > maximumBytes) {
+    throw new AccessError("Request payload is too large.", 413, "PAYLOAD_TOO_LARGE");
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new AccessError("Request body is not valid JSON.", 400, "INVALID_JSON");
+  }
+}
+
 function queueError(error) {
   const message = String(error?.message || "");
 
@@ -183,7 +205,7 @@ export async function POST(request) {
   try {
     validateSameOrigin(request);
     const user = await requireAdmin();
-    const command = validateCommand(await request.json());
+    const command = validateCommand(await readLimitedJson(request));
     const supabase = createAdminClient();
 
     await enforceRateLimit(supabase, user, command);
